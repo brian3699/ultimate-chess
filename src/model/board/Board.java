@@ -2,18 +2,16 @@ package model.board;
 
 
 import model.piece.Piece;
-import model.piece.PieceInterface;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.lang.Object;
 
 
 public class Board implements BoardInterface{
     // Instances of pieces will be stored in this List
-    private List<List<?>> myBoard;
+    private List<ArrayList<Piece>> myBoard;
 
 
     /**
@@ -32,7 +30,6 @@ public class Board implements BoardInterface{
         setDefaultBoard(width, height);
     }
 
-
     // Initialize board
     private void setDefaultBoard(int width, int height){
         myBoard = new ArrayList<>();
@@ -46,7 +43,8 @@ public class Board implements BoardInterface{
 
     @Override
     public char peek(int x, int y) {
-        return 0;
+        Piece piece = myBoard.get(y).get(x);
+        return piece.getPieceType();
     }
 
     @Override
