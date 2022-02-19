@@ -5,4 +5,19 @@ public class Piece implements PieceInterface{
     public char getPieceType() {
         return 0;
     }
+
+    @Override
+    public int getPlayerNumber() {
+        return 0;
+    }
+
+    @Override
+    public int getX() {
+        return 0;
+    }
+
+    @Override
+    public int getY() {
+        return 0;
+    }
 }

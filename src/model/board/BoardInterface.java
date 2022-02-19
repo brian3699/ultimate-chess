@@ -34,7 +34,7 @@ public interface BoardInterface {
      * @param y row number of the cell
      * @return true if the piece has been successfully added, false if not
      */
-    boolean setCell(char pieceType, int x, int y);
+    void setCell(int playerNumber, char pieceType, int x, int y);
 
     /**
      * return possible moves of a cell
