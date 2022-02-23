@@ -1,5 +1,8 @@
 package model.board;
 
+import model.piece.Piece;
+import model.piece.PieceInterface;
+
 import java.awt.*;
 
 /**
@@ -7,7 +10,7 @@ import java.awt.*;
  *
  * @author Young Jun
  */
-public interface BoardInterface {
+public interface BoardInterface <T extends PieceInterface> {
 
     /**
      * returns the state (name of the piece or empty) of the cell

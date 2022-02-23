@@ -2,6 +2,7 @@ package model.board;
 
 
 import model.piece.Piece;
+import model.piece.PieceInterface;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -9,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Board implements BoardInterface{
+public class Board <T extends PieceInterface> implements BoardInterface{
     // Instances of pieces will be stored in this List
-    private List<List<Piece>> myBoard;
-    private List<List<Piece>> capturedPiece;
+    private List<List<T>> myBoard;
+    private List<List<T>> capturedPiece;
     private int[] scoreTable;
 
 
@@ -53,7 +54,7 @@ public class Board implements BoardInterface{
         myBoard = new ArrayList<>();
         for(int i = 0; i < height; i++){
             // create a row
-            ArrayList<Piece> row = (ArrayList<Piece>) Arrays.asList(new Piece[width]);
+            ArrayList<T> row = (ArrayList<T>) Arrays.asList(new Piece[width]);
             // add to myBoard
             myBoard.add(row);
         }
@@ -68,7 +69,7 @@ public class Board implements BoardInterface{
     }
 
     // capture a piece
-    private void capture(Piece movingPiece, Piece capPiece){
+    private void capture(T movingPiece, T capPiece){
         // update myBoard
         movePiece(movingPiece, capPiece.getX(), capPiece.getY());
 
@@ -78,14 +79,14 @@ public class Board implements BoardInterface{
     }
 
     // move piece to a new cell
-    private void movePiece(Piece movingPiece, int x, int y){
+    private void movePiece(T movingPiece, int x, int y){
         myBoard.get(y).set(x, movingPiece);
         myBoard.get(y).set(x, null);
     }
 
     @Override
     public char peek(int x, int y) {
-        Piece piece = myBoard.get(y).get(x);
+        T piece = myBoard.get(y).get(x);
         return piece.getPieceType();
     }
 
@@ -94,8 +95,8 @@ public class Board implements BoardInterface{
         // when it is not a valid move return false
         if(!checkValidMove(x1, y1, x2, y2)) return false;
 
-        Piece currentCell = myBoard.get(y1).get(x1);
-        Piece destinationCell = myBoard.get(y2).get(x2);
+        T currentCell = myBoard.get(y1).get(x1);
+        T destinationCell = myBoard.get(y2).get(x2);
 
         if(destinationCell != null){
             // if there is a piece in the destination cell, capture it
@@ -123,8 +124,7 @@ public class Board implements BoardInterface{
     @Override
     public void setCell(int playerNumber, char pieceType, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
-        Piece newPiece = new Piece();
-        myBoard.get(y).set(x, newPiece);
+        myBoard.get(y).set(x, (T) new Piece());
     }
 
     @Override
