@@ -1,5 +1,8 @@
 package model.piece;
 
+import java.awt.Point;
+import java.util.List;
+
 public interface PieceInterface {
 
     /**
@@ -7,6 +10,13 @@ public interface PieceInterface {
      * @return Piece Type
      */
     char getPieceType();
+
+    /**
+     * return the number of points this piece is worth
+     * @return number of points
+     */
+    int getPieceScore();
+
 
     /**
      * return the player number this piece belongs to
