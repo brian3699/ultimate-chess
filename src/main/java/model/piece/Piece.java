@@ -1,11 +1,8 @@
 package model.piece;
 
-import java.awt.Point;
-import java.util.List;
-
 public class Piece implements PieceInterface{
     private final int pieceScore;
-    private final char pieceType;
+    private final String pieceType;
     private final int xLocation;
     private final int yLocation;
     private final int playerNumber;
@@ -17,13 +14,13 @@ public class Piece implements PieceInterface{
      */
     public Piece(){
         pieceScore = 0;
-        pieceType = 0;
+        pieceType = "0";
         xLocation = 0;
         yLocation = 0;
         playerNumber = 0;
     }
 
-    public Piece(char pieceType, int pieceScore, int playerNumber, int x, int y){
+    public Piece(String pieceType, int pieceScore, int playerNumber, int x, int y){
         this.pieceScore = pieceScore;
         this.pieceType = pieceType;
         this.xLocation = x;
@@ -33,7 +30,7 @@ public class Piece implements PieceInterface{
     
     
     @Override
-    public char getPieceType() {
+    public String getPieceType() {
         return pieceType;
     }
 

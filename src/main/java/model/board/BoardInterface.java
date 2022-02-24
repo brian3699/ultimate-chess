@@ -1,16 +1,11 @@
 package model.board;
 
-import model.piece.Piece;
-import model.piece.PieceInterface;
-
-import java.awt.*;
-
 /**
  * backend class of a chess board
  *
  * @author Young Jun
  */
-public interface BoardInterface <T extends PieceInterface> {
+public interface BoardInterface  {
 
     /**
      * returns the state (name of the piece or empty) of the cell
@@ -18,7 +13,7 @@ public interface BoardInterface <T extends PieceInterface> {
      * @param y row number
      * @return state of the cell
      */
-    char peek(int x, int y);
+    String peek(int x, int y);
 
     /**
      * moves the piece in the grid
@@ -37,14 +32,14 @@ public interface BoardInterface <T extends PieceInterface> {
      * @param y row number of the cell
      * @return true if the piece has been successfully added, false if not
      */
-    void setCell(int playerNumber, char pieceType, int x, int y);
+    void setCell(int playerNumber, String pieceType, int x, int y);
 
     /**
-     * return possible moves of a cell
-     * @param x
-     * @param y
+     * Return the piece type of the cell
+     * @param x x cell number
+     * @param y y cell number
      * @return
      */
-    Point[] getPossibleMoves(int x, int y);
+    public String getPieceType(int x, int y);
 
 }

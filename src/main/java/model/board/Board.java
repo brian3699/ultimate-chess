@@ -85,7 +85,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     @Override
-    public char peek(int x, int y) {
+    public String peek(int x, int y) {
         T piece = myBoard.get(y).get(x);
         return piece.getPieceType();
     }
@@ -122,14 +122,13 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     @Override
-    public void setCell(int playerNumber, char pieceType, int x, int y) {
+    public void setCell(int playerNumber, String pieceType, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
         myBoard.get(y).set(x, (T) new Piece());
     }
 
     @Override
-    public Point[] getPossibleMoves(int x, int y) {
-        // TODO : need to finish this part after completing Piece classes
-        return null;
+    public String getPieceType(int x, int y){
+        return myBoard.get(y).get(x).getPieceType();
     }
 }

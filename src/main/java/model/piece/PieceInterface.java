@@ -1,15 +1,12 @@
 package model.piece;
 
-import java.awt.Point;
-import java.util.List;
-
 public interface PieceInterface {
 
     /**
      * return Piece Type
      * @return Piece Type
      */
-    char getPieceType();
+    String getPieceType();
 
     /**
      * return the number of points this piece is worth
