@@ -1,5 +1,9 @@
 package model.board;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 /**
  * backend class of a chess board
  *
@@ -27,12 +31,12 @@ public interface BoardInterface  {
 
     /**
      * add piece to a cell
-     * @param pieceType type of the piece that will be added
+     * @param pieceInfo ResourceBundle containing the information of the cell
      * @param x column number of the cell
      * @param y row number of the cell
      * @return true if the piece has been successfully added, false if not
      */
-    void setCell(int playerNumber, String pieceType, int x, int y);
+    public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y);
 
     /**
      * Return the piece type of the cell
@@ -42,4 +46,11 @@ public interface BoardInterface  {
      */
     public String getPieceType(int x, int y);
 
+    /**
+     * return arraylist of possible moves of a piece
+     * @param x x cell number
+     * @param y y cell number
+     * @return arraylist of possible moves of a piece
+     */
+    public ArrayList<Point> getPossibleMoves(int x, int y);
 }

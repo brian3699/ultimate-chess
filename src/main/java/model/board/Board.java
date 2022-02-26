@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 public class Board <T extends PieceInterface> implements BoardInterface{
@@ -15,6 +16,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     private List<List<T>> myBoard;
     private List<List<T>> capturedPiece;
     private int[] scoreTable;
+    private int width;
+    private int height;
 
 
     /**
@@ -51,6 +54,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     // Initialize board
     private void setDefaultBoard(int width, int height){
+        this.width = width;
+        this.height = height;
         myBoard = new ArrayList<>();
         for(int i = 0; i < height; i++){
             // create a row
@@ -111,6 +116,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     // check whether it is a valid move
     private boolean checkValidMove(int x1, int y1, int x2, int y2){
+        /*
         // if the current cell is empty return false
         if(myBoard.get(y1).get(x1) != null) return false;
         for(Point coordinate : getPossibleMoves(x1, y1)){
@@ -119,16 +125,28 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         }
         // return false otherwise
         return false;
+
+         */
+        return false;
     }
 
     @Override
-    public void setCell(int playerNumber, String pieceType, int x, int y) {
+    public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
-        myBoard.get(y).set(x, (T) new Piece());
+        myBoard.get(y).set(x, (T) new Piece(pieceInfo, playerNumber, x, y));
     }
 
     @Override
     public String getPieceType(int x, int y){
         return myBoard.get(y).get(x).getPieceType();
+    }
+
+    @Override
+    public ArrayList<Point> getPossibleMoves(int x, int y){
+        PieceInterface piece = myBoard.get(y).get(x);
+        ArrayList<Point> moves = piece.getMoves(x, y);
+        // remove point when it is located beyond the board
+        moves.removeIf(p -> p.getX() > width - 1 || p.getX() < 0 || p.getY() > height - 1 || p.getY() < 0);
+        return moves;
     }
 }

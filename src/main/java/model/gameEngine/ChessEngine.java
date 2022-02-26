@@ -5,8 +5,10 @@ import com.opencsv.exceptions.CsvValidationException;
 import model.board.Board;
 import model.piece.Piece;
 
+import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -15,8 +17,8 @@ import java.util.ResourceBundle;
 public class ChessEngine {
     private static final String DEFAULT_BOARD_DATA ="ultimate_chess.src.model.resources.board.Default_Chess_Board.csv";
     private static final String DEFAULT_TEAM_DATA = "ultimate_chess.src.model.resources.board.Default_Chess_Board_Team.csv";
-    private static final ResourceBundle PIECE_VALUE_PATH =
-            ResourceBundle.getBundle("ultimate_chess.src.model.resources.pieceInfo.PawnWhiteMoves.properties");
+    private static final ResourceBundle CHESS_PIECE_DATA =
+            ResourceBundle.getBundle("ultimate_chess.src.main.java.model.resources.pieceInfo.ChessPieceInfo.properties");
 
     private Board<Piece> myBoard;
     private int width;
@@ -31,7 +33,6 @@ public class ChessEngine {
     public ChessEngine() throws IOException, CsvValidationException {
         initializeBoard(DEFAULT_BOARD_DATA, DEFAULT_TEAM_DATA);
         setPiece();
-
     }
 
     /**
@@ -59,17 +60,23 @@ public class ChessEngine {
     // Set pieces in myBoard
     private void setPiece() throws CsvValidationException, IOException {
         for(int i=0; i<height; i++){
+            // array containing the types of the pieces
             String[] pieceLine = boardReader.readNext();
+            // array containing the team numbers of the pieces
             String[] teamLine = teamReader.readNext();
             for(int j = 0; j < width; j++){
+                // path to the ResourceBundle containing Piece information
+                String pieceInfoPath = CHESS_PIECE_DATA.getString(pieceLine[j]);
+                ResourceBundle pieceDataResource = ResourceBundle.getBundle(pieceInfoPath);
+                // team number of the piece
                 int teamNumber = Integer.parseInt(teamLine[j]);
-                myBoard.setCell(teamNumber, pieceLine[j], j, i);
+                myBoard.setCell(teamNumber, pieceDataResource, j, i);
             }
         }
     }
 
-    private String[] getValidMoves(int x, int y){
-        String pieceType = myBoard.getPieceType(x, y);
+    private Point[] getValidMoves(int x, int y){
+        ArrayList<Point> moves = myBoard.getPossibleMoves(x, y);
 
     }
 
