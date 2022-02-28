@@ -8,7 +8,10 @@ import model.piece.Piece;
 import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 
@@ -25,6 +28,7 @@ public class ChessEngine {
     private int height;
     private CSVReader boardReader;
     private CSVReader teamReader;
+    private Point currentPiece;
 
 
     /**
@@ -75,10 +79,98 @@ public class ChessEngine {
         }
     }
 
-    private Point[] getValidMoves(int x, int y){
-        ArrayList<Point> moves = myBoard.getPossibleMoves(x, y);
-
+    private ArrayList<Point> getValidMoves(int x, int y) throws InvocationTargetException, IllegalAccessException {
+        String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
+        return (ArrayList<Point>) handleMethod(methodName).invoke(ChessEngine.this);
     }
 
+    private ArrayList<Point> getPawnMoves(){
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        ArrayList<Point> moves = getPossibleMoves(x, y);
+        int player = myBoard.getPlayerNumber(x,y);
+        for(Point move : moves){
+            int team = myBoard.getPlayerNumber(move.x,move.y);
+            if(team == player) moves.remove(move);
+        }
+        if(player == 1 && y == 1) moves.add(new Point(x, y+2));
+        if(player == 2 && y == height - 1) moves.add(new Point(x, y - 2));
+        return moves;
+    }
+
+    private ArrayList<Point> getKnightMoves(){
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        ArrayList<Point> moves = getPossibleMoves(x, y);
+        int player = myBoard.getPlayerNumber(x,y);
+        for(Point move : moves){
+            int team = myBoard.getPlayerNumber(move.x,move.y);
+            if(team == player) moves.remove(move);
+        }
+        return moves;
+    }
+
+    private ArrayList<Point> getBishopMoves(){
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        return getPossibleMoves(x, y);
+    }
+
+    private ArrayList<Point> getRookMoves() {
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        return getPossibleMoves(x, y);
+    }
+
+    private ArrayList<Point> getKingMoves() {
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        return getPossibleMoves(x, y);
+    }
+
+    private ArrayList<Point> getQueenMoves() {
+        int x = currentPiece.x;
+        int y = currentPiece.y;
+        return getPossibleMoves(x, y);
+    }
+
+
+    private ArrayList<Point> getPossibleMoves(int x, int y) {
+        int team = 1;
+        if(myBoard.getPlayerNumber(x,y) == 2) team = -1;
+        ArrayList<Point> possibleMoves = new ArrayList<>();
+        ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
+        Enumeration<String> keys = pieceMoves.getKeys();
+        // skip the first two keys.
+        keys.nextElement();
+        keys.nextElement();
+        // enumerate all possible moves of a piece
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            String[] move = pieceMoves.getString(key).split(",");
+            int newX = x + Integer.parseInt(move[0])*team;
+            int newY = y + Integer.parseInt(move[1])*team;
+            possibleMoves.add(new Point(newX, newY));
+        }
+            possibleMoves.removeIf(p -> p.getX() > width - 1 || p.getX() < 0 || p.getY() > height - 1 || p.getY() < 0);
+        return possibleMoves;
+    }
+
+
+    private Method handleMethod(String name) {
+        try {
+            Class<?> thisClass = Class.forName(String.valueOf(this));
+            Method m = thisClass.getDeclaredMethod(name);
+            return m;
+        } catch (NoSuchMethodException e) {
+            String error = String.format("The method: %s could not be generated. Double check method you are trying to call's name", name);
+            System.out.println(error);
+            return null;
+        }catch(ClassNotFoundException e){
+            String error = String.format("The class: %s could not be generated. Double check class you are trying to call's name", name);
+            System.out.println(error);
+            return null;
+        }
+    }
 
 }

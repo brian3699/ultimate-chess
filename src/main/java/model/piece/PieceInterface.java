@@ -1,8 +1,5 @@
 package model.piece;
 
-import java.awt.*;
-import java.util.ArrayList;
-
 public interface PieceInterface {
 
     /**
@@ -36,9 +33,4 @@ public interface PieceInterface {
      */
     int getY();
 
-    /**
-     * Return possible moves of a piece
-     * @return possible moves of a piece
-     */
-    ArrayList<Point> getMoves(int x, int y);
 }

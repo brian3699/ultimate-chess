@@ -4,7 +4,6 @@ package model.board;
 import model.piece.Piece;
 import model.piece.PieceInterface;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -133,7 +132,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     @Override
     public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
-        myBoard.get(y).set(x, (T) new Piece(pieceInfo, playerNumber, x, y));
+        myBoard.get(y).set(x, (T) new Piece(pieceInfo.getString("point"),
+                Integer.parseInt(pieceInfo.getString("name")), playerNumber, x, y));
     }
 
     @Override
@@ -141,12 +141,9 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         return myBoard.get(y).get(x).getPieceType();
     }
 
+
     @Override
-    public ArrayList<Point> getPossibleMoves(int x, int y){
-        PieceInterface piece = myBoard.get(y).get(x);
-        ArrayList<Point> moves = piece.getMoves(x, y);
-        // remove point when it is located beyond the board
-        moves.removeIf(p -> p.getX() > width - 1 || p.getX() < 0 || p.getY() > height - 1 || p.getY() < 0);
-        return moves;
+    public int getPlayerNumber(int x, int y){
+        return myBoard.get(y).get(x).getPlayerNumber();
     }
 }
