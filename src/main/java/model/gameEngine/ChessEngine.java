@@ -21,7 +21,7 @@ public class ChessEngine {
     private static final String DEFAULT_BOARD_DATA ="ultimate_chess.src.model.resources.board.Default_Chess_Board.csv";
     private static final String DEFAULT_TEAM_DATA = "ultimate_chess.src.model.resources.board.Default_Chess_Board_Team.csv";
     private static final ResourceBundle CHESS_PIECE_DATA =
-            ResourceBundle.getBundle("ultimate_chess.src.main.java.model.resources.pieceInfo.ChessPieceInfo.properties");
+            ResourceBundle.getBundle("ultimate_chess.src.main.java.model.resources.pieceInfo.ChessPiecePaths.properties");
 
     private Board<Piece> myBoard;
     private int width;
