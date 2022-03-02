@@ -10,15 +10,6 @@ import java.util.ResourceBundle;
 public interface BoardInterface {
 
     /**
-     * returns the state (name of the piece or empty) of the cell
-     *
-     * @param x column number
-     * @param y row number
-     * @return state of the cell
-     */
-    String peek(int x, int y);
-
-    /**
      * moves the piece in the grid
      *
      * @param x1 column number of the piece

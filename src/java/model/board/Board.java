@@ -58,7 +58,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         myBoard = new ArrayList<>();
         for(int i = 0; i < height; i++){
             // create a row
-            ArrayList<T> row = (ArrayList<T>) Arrays.asList(new Piece[width]);
+            List<T> row = (List<T>) Arrays.asList(new Piece[width]);
             // add to myBoard
             myBoard.add(row);
         }
@@ -85,32 +85,31 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     // move piece to a new cell
     private void movePiece(T movingPiece, int x, int y){
         myBoard.get(y).set(x, movingPiece);
-        myBoard.get(y).set(x, null);
+        myBoard.get(movingPiece.getY()).set(movingPiece.getX(), null);
     }
 
-    @Override
-    public String peek(int x, int y) {
-        T piece = myBoard.get(y).get(x);
-        return piece.getPieceType();
-    }
 
     @Override
     public boolean move(int x1, int y1, int x2, int y2) {
-        // when it is not a valid move return false
-        if(!checkValidMove(x1, y1, x2, y2)) return false;
+        try {
+            // when it is not a valid move return false
+            if (!checkValidMove(x1, y1, x2, y2)) return false;
 
-        T currentCell = myBoard.get(y1).get(x1);
-        T destinationCell = myBoard.get(y2).get(x2);
+            T currentCell = myBoard.get(y1).get(x1);
+            T destinationCell = myBoard.get(y2).get(x2);
 
-        if(destinationCell != null){
-            // if there is a piece in the destination cell, capture it
-            capture(currentCell, destinationCell);
-        } else{
-            // if the destination cell is empty, move the piece to this cell
-            movePiece(currentCell, x2, y2);
+            if (destinationCell != null) {
+                // if there is a piece in the destination cell, capture it
+                capture(currentCell, destinationCell);
+            } else {
+                // if the destination cell is empty, move the piece to this cell
+                movePiece(currentCell, x2, y2);
+            }
+
+            return true;
+        }catch (IndexOutOfBoundsException e){
+            return false;
         }
-
-        return true;
     }
 
     // check whether it is a valid move
@@ -126,14 +125,14 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         return false;
 
          */
-        return false;
+        return true;
     }
 
     @Override
     public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
-        myBoard.get(y).set(x, (T) new Piece(pieceInfo.getString("point"),
-                Integer.parseInt(pieceInfo.getString("name")), playerNumber, x, y));
+        myBoard.get(y).set(x, (T) new Piece(pieceInfo.getString("name"),
+                Integer.parseInt(pieceInfo.getString("point")), playerNumber, x, y));
     }
 
     @Override
