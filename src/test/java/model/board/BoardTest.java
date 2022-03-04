@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ResourceBundle;
 
 class BoardTest {
-    ResourceBundle testResource = ResourceBundle.getBundle("model/resources/pieceInfo/ChessPiecePaths");
+    ResourceBundle testResource = ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
     Board<Piece> testBoard = new Board<>();
 
     @BeforeEach

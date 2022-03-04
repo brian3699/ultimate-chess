@@ -1,6 +1,7 @@
 package model.gameEngine;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import model.board.Board;
 import model.piece.Piece;
@@ -12,16 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
 
 
 public class ChessEngine {
-    private static final String DEFAULT_BOARD_DATA ="ultimate_chess.src.model.resources.board.Default_Chess_Board.csv";
-    private static final String DEFAULT_TEAM_DATA = "ultimate_chess.src.model.resources.board.Default_Chess_Board_Team.csv";
+    private static final String DEFAULT_BOARD_DATA = "resources/board/Default_Chess_Board.csv";
+    private static final String DEFAULT_TEAM_DATA = "resources/board/Default_Chess_Board_Team.csv";
     private static final ResourceBundle CHESS_PIECE_DATA =
-            ResourceBundle.getBundle("ultimate_chess.src.main.java.model.resources.pieceInfo.ChessPiecePaths.properties");
+            ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
 
     private Board<Piece> myBoard;
     private int width;
@@ -34,7 +36,7 @@ public class ChessEngine {
     /**
      * sets the board using default data
      */
-    public ChessEngine() throws IOException, CsvValidationException {
+    public ChessEngine() throws IOException, CsvException {
         initializeBoard(DEFAULT_BOARD_DATA, DEFAULT_TEAM_DATA);
         setPiece();
     }
@@ -44,19 +46,21 @@ public class ChessEngine {
      * @param boardFilePath file path to a csv file containing the state of each cell
      * @param teamFilePath file path to a csv file containing the team number of each cell
      */
-    public ChessEngine(String boardFilePath, String teamFilePath) throws IOException, CsvValidationException {
+    public ChessEngine(String boardFilePath, String teamFilePath) throws IOException, CsvException {
         initializeBoard(boardFilePath, teamFilePath);
         setPiece();
     }
 
     // initialize class Board
-    private void initializeBoard(String boardFilePath, String teamFilePath) throws IOException {
+    private void initializeBoard(String boardFilePath, String teamFilePath) throws IOException, CsvException {
         // create csv file reader
         boardReader = new CSVReader(new FileReader(boardFilePath));
         teamReader = new CSVReader(new FileReader(teamFilePath));
         // get width and height
         width = boardReader.peek().length;
-        height = (int) boardReader.getLinesRead();
+        height = (int) boardReader.readAll().size();
+        // reset boardReader
+        boardReader = new CSVReader(new FileReader(boardFilePath));
         // initialize Board
         myBoard = new Board<>(width, height);
     }
@@ -69,17 +73,21 @@ public class ChessEngine {
             // array containing the team numbers of the pieces
             String[] teamLine = teamReader.readNext();
             for(int j = 0; j < width; j++){
-                // path to the ResourceBundle containing Piece information
-                String pieceInfoPath = CHESS_PIECE_DATA.getString(pieceLine[j]);
-                ResourceBundle pieceDataResource = ResourceBundle.getBundle(pieceInfoPath);
-                // team number of the piece
-                int teamNumber = Integer.parseInt(teamLine[j]);
-                myBoard.setCell(teamNumber, pieceDataResource, j, i);
+                try {
+                    // path to the ResourceBundle containing Piece information
+                    String pieceInfoPath = CHESS_PIECE_DATA.getString(pieceLine[j]);
+                    ResourceBundle pieceDataResource = ResourceBundle.getBundle(pieceInfoPath);
+                    // team number of the piece
+                    int teamNumber = Integer.parseInt(teamLine[j]);
+                    myBoard.setCell(teamNumber, pieceDataResource, j, i);
+                }catch (MissingResourceException e){
+                    break;
+                }
             }
         }
     }
 
-    private ArrayList<Point> getValidMoves(int x, int y) throws InvocationTargetException, IllegalAccessException {
+    public ArrayList<Point> getValidMoves(int x, int y) throws InvocationTargetException, IllegalAccessException {
         String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
         return (ArrayList<Point>) handleMethod(methodName).invoke(ChessEngine.this);
     }
@@ -171,6 +179,10 @@ public class ChessEngine {
             System.out.println(error);
             return null;
         }
+    }
+
+    public Board<Piece> getBoard(){
+        return myBoard;
     }
 
 }
