@@ -21,6 +21,7 @@ class ChessEngineTest {
     void test1() throws InvocationTargetException, IllegalAccessException {
         Board<Piece> myBoard = chessEngine.getBoard();
         System.out.println(myBoard.getPieceType(4,7));
+        System.out.println(chessEngine.getValidMoves(1,1).size());
 
     }
 

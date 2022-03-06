@@ -88,6 +88,7 @@ public class ChessEngine {
     }
 
     public ArrayList<Point> getValidMoves(int x, int y) throws InvocationTargetException, IllegalAccessException {
+        currentPiece = new Point(x,y);
         String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
         return (ArrayList<Point>) handleMethod(methodName).invoke(ChessEngine.this);
     }
@@ -151,7 +152,6 @@ public class ChessEngine {
         Enumeration<String> keys = pieceMoves.getKeys();
         // skip the first two keys.
         keys.nextElement();
-        keys.nextElement();
         // enumerate all possible moves of a piece
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
@@ -167,7 +167,7 @@ public class ChessEngine {
 
     private Method handleMethod(String name) {
         try {
-            Class<?> thisClass = Class.forName(String.valueOf(this));
+            Class<?> thisClass = Class.forName("model.gameEngine.ChessEngine");
             Method m = thisClass.getDeclaredMethod(name);
             return m;
         } catch (NoSuchMethodException e) {
