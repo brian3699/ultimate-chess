@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -98,12 +97,8 @@ public class ChessEngine {
         int y = currentPiece.y;
         ArrayList<Point> moves = getPossibleMoves(x, y);
         int player = myBoard.getPlayerNumber(x,y);
-        for(Point move : moves){
-            int team = myBoard.getPlayerNumber(move.x,move.y);
-            if(team == player) moves.remove(move);
-        }
         if(player == 1 && y == 1) moves.add(new Point(x, y+2));
-        if(player == 2 && y == height - 1) moves.add(new Point(x, y - 2));
+        if(player == 2 && y == height - 2) moves.add(new Point(x, y - 2));
         return moves;
     }
 
@@ -145,22 +140,20 @@ public class ChessEngine {
 
 
     private ArrayList<Point> getPossibleMoves(int x, int y) {
-        int team = 1;
-        if(myBoard.getPlayerNumber(x,y) == 2) team = -1;
+        String team = Integer.toString(myBoard.getPlayerNumber(x,y));
         ArrayList<Point> possibleMoves = new ArrayList<>();
         ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
-        Enumeration<String> keys = pieceMoves.getKeys();
-        // skip the first two keys.
-        keys.nextElement();
         // enumerate all possible moves of a piece
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            String[] move = pieceMoves.getString(key).split(",");
-            int newX = x + Integer.parseInt(move[0])*team;
-            int newY = y + Integer.parseInt(move[1])*team;
-            possibleMoves.add(new Point(newX, newY));
+
+        for(String key : pieceMoves.keySet()){
+            if(team.equals("" + key.charAt(0))){
+                String[] move = pieceMoves.getString(key).split(",");
+                int newX = Integer.parseInt(move[0]) + currentPiece.x;
+                int newY = Integer.parseInt(move[1]) + currentPiece.y;
+                possibleMoves.add(new Point(newX, newY));
+            }
         }
-            possibleMoves.removeIf(p -> p.getX() > width - 1 || p.getX() < 0 || p.getY() > height - 1 || p.getY() < 0);
+        possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
         return possibleMoves;
     }
 
