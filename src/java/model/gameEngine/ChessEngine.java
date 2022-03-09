@@ -138,8 +138,52 @@ public class ChessEngine {
         return getPossibleMoves(x, y);
     }
 
+    private ArrayList<Point> removePointsBeyond(ArrayList<Point> moves, Point point, int xIncrement, int yIncrement){
+        for(Point move : moves){
+            int xMove = move.x - point.x;
+            int yMove = move.y - point.y;
+            for(int i = 0; i < 10; i++){
+                if(xMove == xIncrement*i && yMove == yIncrement*i){
+                    moves.remove(move);
+                    break;
+                }
+            }
+        }
+        return moves;
+    }
+
 
     private ArrayList<Point> getPossibleMoves(int x, int y) {
+        String team = Integer.toString(myBoard.getPlayerNumber(x,y));
+        ArrayList<Point> possibleMoves = new ArrayList<>();
+        ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
+        // enumerate all possible moves of a piece
+
+        for(String key : pieceMoves.keySet()){
+            if(team.equals("" + key.charAt(0))){
+                String[] move = pieceMoves.getString(key).split(",");
+                int newX = Integer.parseInt(move[0]) + currentPiece.x;
+                int newY = Integer.parseInt(move[1]) + currentPiece.y;
+                possibleMoves.add(new Point(newX, newY));
+            }
+        }
+        for(Point move: possibleMoves){
+            if(myBoard.getPlayerNumber(move.x, move.y) == myBoard.getPlayerNumber(x,y)) {
+                possibleMoves.remove(move);
+                int xIncrement = 0;
+                int yIncrement = 0;
+                if(move.x - x > 0)  xIncrement = 1;
+                if(move.x - x < 0)  xIncrement = -1;
+                if(move.y - y > 0)  yIncrement = 1;
+                if(move.y - y < 0)  yIncrement = -1;
+                possibleMoves = removePointsBeyond(possibleMoves, move, xIncrement, yIncrement);
+            }
+        }
+        possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
+        return possibleMoves;
+    }
+
+    private ArrayList<Point> getSimpleMoves(int x, int y){
         String team = Integer.toString(myBoard.getPlayerNumber(x,y));
         ArrayList<Point> possibleMoves = new ArrayList<>();
         ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
@@ -157,8 +201,30 @@ public class ChessEngine {
         return possibleMoves;
     }
 
+    private ArrayList<Point> getComplexMoves(int x, int y){
+        String team = Integer.toString(myBoard.getPlayerNumber(x,y));
+        ArrayList<Point> possibleMoves = new ArrayList<>();
+        ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
+        // enumerate all possible moves of a piece
 
-    private Method handleMethod(String name) {
+        for(String key : pieceMoves.keySet()){
+            if(team.equals("" + key.charAt(0))){
+                for(int i = 0; i < 15; i++){
+                    String[] move = pieceMoves.getString(key).split(",");
+                    int newX = Integer.parseInt(move[0])*i + currentPiece.x;
+                    int newY = Integer.parseInt(move[1])*i + currentPiece.y;
+                    possibleMoves.add(new Point(newX, newY));
+                }
+            }
+        }
+        possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
+        return possibleMoves;
+    }
+
+
+
+
+        private Method handleMethod(String name) {
         try {
             Class<?> thisClass = Class.forName("model.gameEngine.ChessEngine");
             Method m = thisClass.getDeclaredMethod(name);
