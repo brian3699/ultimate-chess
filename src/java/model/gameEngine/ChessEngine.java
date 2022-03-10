@@ -95,7 +95,7 @@ public class ChessEngine {
     private ArrayList<Point> getPawnMoves(){
         int x = currentPiece.x;
         int y = currentPiece.y;
-        ArrayList<Point> moves = getPossibleMoves(x, y);
+        ArrayList<Point> moves = getSimpleMoves(x, y);
         int player = myBoard.getPlayerNumber(x,y);
         if(player == 1 && y == 1) moves.add(new Point(x, y+2));
         if(player == 2 && y == height - 2) moves.add(new Point(x, y - 2));
@@ -105,7 +105,7 @@ public class ChessEngine {
     private ArrayList<Point> getKnightMoves(){
         int x = currentPiece.x;
         int y = currentPiece.y;
-        ArrayList<Point> moves = getPossibleMoves(x, y);
+        ArrayList<Point> moves = getSimpleMoves(x, y);
         int player = myBoard.getPlayerNumber(x,y);
         for(Point move : moves){
             int team = myBoard.getPlayerNumber(move.x,move.y);
@@ -117,25 +117,25 @@ public class ChessEngine {
     private ArrayList<Point> getBishopMoves(){
         int x = currentPiece.x;
         int y = currentPiece.y;
-        return getPossibleMoves(x, y);
+        return getComplexMoves(x, y);
     }
 
     private ArrayList<Point> getRookMoves() {
         int x = currentPiece.x;
         int y = currentPiece.y;
-        return getPossibleMoves(x, y);
+        return getComplexMoves(x, y);
     }
 
     private ArrayList<Point> getKingMoves() {
         int x = currentPiece.x;
         int y = currentPiece.y;
-        return getPossibleMoves(x, y);
+        return getSimpleMoves(x,y);
     }
 
     private ArrayList<Point> getQueenMoves() {
         int x = currentPiece.x;
         int y = currentPiece.y;
-        return getPossibleMoves(x, y);
+        return getComplexMoves(x, y);
     }
 
     private ArrayList<Point> removePointsBeyond(ArrayList<Point> moves, Point point, int xIncrement, int yIncrement){
@@ -194,6 +194,11 @@ public class ChessEngine {
                 String[] move = pieceMoves.getString(key).split(",");
                 int newX = Integer.parseInt(move[0]) + currentPiece.x;
                 int newY = Integer.parseInt(move[1]) + currentPiece.y;
+                if(myBoard.getPlayerNumber(newX, newY) == myBoard.getPlayerNumber(x,y)) break;
+                else if(myBoard.getPlayerNumber(newX, newY) != 0){
+                    possibleMoves.add(new Point(newX, newY));
+                    break;
+                }
                 possibleMoves.add(new Point(newX, newY));
             }
         }
@@ -213,6 +218,11 @@ public class ChessEngine {
                     String[] move = pieceMoves.getString(key).split(",");
                     int newX = Integer.parseInt(move[0])*i + currentPiece.x;
                     int newY = Integer.parseInt(move[1])*i + currentPiece.y;
+                    if(myBoard.getPlayerNumber(newX, newY) == myBoard.getPlayerNumber(x,y)) break;
+                    else if(myBoard.getPlayerNumber(newX, newY) != 0){
+                        possibleMoves.add(new Point(newX, newY));
+                        break;
+                    }
                     possibleMoves.add(new Point(newX, newY));
                 }
             }

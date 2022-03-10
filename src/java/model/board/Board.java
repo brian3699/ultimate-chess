@@ -137,12 +137,20 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     @Override
     public String getPieceType(int x, int y){
-        return myBoard.get(y).get(x).getPieceType();
+        try{
+            return myBoard.get(y).get(x).getPieceType();
+        }catch (IndexOutOfBoundsException e){
+            return "empty";
+        }
     }
 
 
     @Override
     public int getPlayerNumber(int x, int y){
-        return myBoard.get(y).get(x).getPlayerNumber();
+        try{
+            return myBoard.get(y).get(x).getPlayerNumber();
+        }catch (IndexOutOfBoundsException e){
+            return 0;
+        }
     }
 }
