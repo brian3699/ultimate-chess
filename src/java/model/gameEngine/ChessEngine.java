@@ -5,12 +5,12 @@ import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import model.board.Board;
 import model.piece.Piece;
+import model.util.ReflectionHandler;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
 
 
 public class ChessEngine {
-    private static final String DEFAULT_BOARD_DATA = "resources/board/Default_Chess_Board.csv";
-    private static final String DEFAULT_TEAM_DATA = "resources/board/Default_Chess_Board_Team.csv";
-    private static final ResourceBundle CHESS_PIECE_DATA =
-            ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
+    private static final String DEFAULT_BOARD_DATA_PATH = "resources/board/Default_Chess_Board.csv";
+    private static final String DEFAULT_TEAM_DATA_PATH = "resources/board/Default_Chess_Board_Team.csv";
+    private static final ResourceBundle CHESS_PIECE_DATA = ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
+    private static final String CLASS_PATH = "model.gameEngine.ChessEngine";
 
     private Board<Piece> myBoard;
     private int width;
@@ -30,14 +30,13 @@ public class ChessEngine {
     private CSVReader boardReader;
     private CSVReader teamReader;
     private Point currentPiece;
-
+    private final ReflectionHandler reflectionHandler;
 
     /**
-     * sets the board using default data
+     * sets the board using default file
      */
-    public ChessEngine() throws IOException, CsvException {
-        initializeBoard(DEFAULT_BOARD_DATA, DEFAULT_TEAM_DATA);
-        setPiece();
+    public ChessEngine() {
+        this(DEFAULT_BOARD_DATA_PATH, DEFAULT_TEAM_DATA_PATH);
     }
 
     /**
@@ -45,9 +44,16 @@ public class ChessEngine {
      * @param boardFilePath file path to a csv file containing the state of each cell
      * @param teamFilePath file path to a csv file containing the team number of each cell
      */
-    public ChessEngine(String boardFilePath, String teamFilePath) throws IOException, CsvException {
-        initializeBoard(boardFilePath, teamFilePath);
-        setPiece();
+    public ChessEngine(String boardFilePath, String teamFilePath) {
+        reflectionHandler = new ReflectionHandler();
+        try{
+            initializeBoard(boardFilePath, teamFilePath);
+            setPiece();
+        }catch (IOException | CsvException e){
+            // TODO: Refactor
+            System.out.println("Please Choose a Correct File");
+        }
+
     }
 
     // initialize class Board
@@ -86,10 +92,22 @@ public class ChessEngine {
         }
     }
 
-    public ArrayList<Point> getValidMoves(int x, int y) throws InvocationTargetException, IllegalAccessException {
-        currentPiece = new Point(x,y);
-        String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
-        return (ArrayList<Point>) handleMethod(methodName).invoke(ChessEngine.this);
+    /**
+     * Return list of points a piece could move
+     * @param x x coordinate of the piece
+     * @param y y coordinate of the piece
+     * @return ArrayList if Points a piece could move to
+     */
+    public ArrayList<Point> getValidMoves(int x, int y) {
+        try{
+            currentPiece = new Point(x,y);
+            String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
+            // invokes different method for each chess piece type
+            return (ArrayList<Point>) reflectionHandler.handleMethod(methodName,CLASS_PATH).invoke(ChessEngine.this);
+        }catch(InvocationTargetException | IllegalAccessException e){
+            return null;
+        }
+
     }
 
     private ArrayList<Point> getPawnMoves(){
@@ -103,85 +121,26 @@ public class ChessEngine {
     }
 
     private ArrayList<Point> getKnightMoves(){
-        int x = currentPiece.x;
-        int y = currentPiece.y;
-        ArrayList<Point> moves = getSimpleMoves(x, y);
-        int player = myBoard.getPlayerNumber(x,y);
-        for(Point move : moves){
-            int team = myBoard.getPlayerNumber(move.x,move.y);
-            if(team == player) moves.remove(move);
-        }
-        return moves;
+        return getSimpleMoves(currentPiece.x, currentPiece.y);
     }
 
     private ArrayList<Point> getBishopMoves(){
-        int x = currentPiece.x;
-        int y = currentPiece.y;
-        return getComplexMoves(x, y);
+        return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
     private ArrayList<Point> getRookMoves() {
-        int x = currentPiece.x;
-        int y = currentPiece.y;
-        return getComplexMoves(x, y);
+        return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
     private ArrayList<Point> getKingMoves() {
-        int x = currentPiece.x;
-        int y = currentPiece.y;
-        return getSimpleMoves(x,y);
+        return getSimpleMoves(currentPiece.x,currentPiece.y);
     }
 
     private ArrayList<Point> getQueenMoves() {
-        int x = currentPiece.x;
-        int y = currentPiece.y;
-        return getComplexMoves(x, y);
-    }
-
-    private ArrayList<Point> removePointsBeyond(ArrayList<Point> moves, Point point, int xIncrement, int yIncrement){
-        for(Point move : moves){
-            int xMove = move.x - point.x;
-            int yMove = move.y - point.y;
-            for(int i = 0; i < 10; i++){
-                if(xMove == xIncrement*i && yMove == yIncrement*i){
-                    moves.remove(move);
-                    break;
-                }
-            }
-        }
-        return moves;
+        return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
 
-    private ArrayList<Point> getPossibleMoves(int x, int y) {
-        String team = Integer.toString(myBoard.getPlayerNumber(x,y));
-        ArrayList<Point> possibleMoves = new ArrayList<>();
-        ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
-        // enumerate all possible moves of a piece
-
-        for(String key : pieceMoves.keySet()){
-            if(team.equals("" + key.charAt(0))){
-                String[] move = pieceMoves.getString(key).split(",");
-                int newX = Integer.parseInt(move[0]) + currentPiece.x;
-                int newY = Integer.parseInt(move[1]) + currentPiece.y;
-                possibleMoves.add(new Point(newX, newY));
-            }
-        }
-        for(Point move: possibleMoves){
-            if(myBoard.getPlayerNumber(move.x, move.y) == myBoard.getPlayerNumber(x,y)) {
-                possibleMoves.remove(move);
-                int xIncrement = 0;
-                int yIncrement = 0;
-                if(move.x - x > 0)  xIncrement = 1;
-                if(move.x - x < 0)  xIncrement = -1;
-                if(move.y - y > 0)  yIncrement = 1;
-                if(move.y - y < 0)  yIncrement = -1;
-                possibleMoves = removePointsBeyond(possibleMoves, move, xIncrement, yIncrement);
-            }
-        }
-        possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
-        return possibleMoves;
-    }
 
     private ArrayList<Point> getSimpleMoves(int x, int y){
         String team = Integer.toString(myBoard.getPlayerNumber(x,y));
@@ -214,7 +173,7 @@ public class ChessEngine {
 
         for(String key : pieceMoves.keySet()){
             if(team.equals("" + key.charAt(0))){
-                for(int i = 0; i < 15; i++){
+                for(int i = 0; i < Math.max(width, height); i++){
                     String[] move = pieceMoves.getString(key).split(",");
                     int newX = Integer.parseInt(move[0])*i + currentPiece.x;
                     int newY = Integer.parseInt(move[1])*i + currentPiece.y;
@@ -231,27 +190,5 @@ public class ChessEngine {
         return possibleMoves;
     }
 
-
-
-
-        private Method handleMethod(String name) {
-        try {
-            Class<?> thisClass = Class.forName("model.gameEngine.ChessEngine");
-            Method m = thisClass.getDeclaredMethod(name);
-            return m;
-        } catch (NoSuchMethodException e) {
-            String error = String.format("The method: %s could not be generated. Double check method you are trying to call's name", name);
-            System.out.println(error);
-            return null;
-        }catch(ClassNotFoundException e){
-            String error = String.format("The class: %s could not be generated. Double check class you are trying to call's name", name);
-            System.out.println(error);
-            return null;
-        }
-    }
-
-    public Board<Piece> getBoard(){
-        return myBoard;
-    }
 
 }

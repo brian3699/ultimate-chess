@@ -139,7 +139,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     public String getPieceType(int x, int y){
         try{
             return myBoard.get(y).get(x).getPieceType();
-        }catch (IndexOutOfBoundsException e){
+        }catch (NullPointerException | IndexOutOfBoundsException e){
             return "empty";
         }
     }
@@ -149,7 +149,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     public int getPlayerNumber(int x, int y){
         try{
             return myBoard.get(y).get(x).getPlayerNumber();
-        }catch (IndexOutOfBoundsException e){
+        }catch (NullPointerException | IndexOutOfBoundsException e){
             return 0;
         }
     }
