@@ -1,3 +1,4 @@
+import controller.ChessController;
 import controller.MainController;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -7,7 +8,6 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-
     /**
      * The start methods serves the role of a main method of this project.
      */
@@ -15,5 +15,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         MainController mainController = new MainController();
         String gameLanguage = mainController.getUserLanguage();
+        ChessController chessController = new ChessController(gameLanguage);
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController {
-    private static final String LANGUAGE_RESOURCE_DIRECTORY = "view.resources.language.";
     private static final String LANGUAGE_CHOICE_DIRECTORY = "view.resources.language.LanguageOptions";
     private static final String OPTION_TITLE_ENGLISH = "Please Select a Language ";
     private final String defaultLanguage;
@@ -40,15 +39,4 @@ public class MainController {
         gameLanguage = choiceView.getUserLanguage(defaultLanguage, languageOptions, OPTION_TITLE_ENGLISH);
         return gameLanguage;
     }
-
-
-    // make ResourceBundle and return
-    private ResourceBundle makeResourceBundle(String path) {
-        try {
-            return ResourceBundle.getBundle(path);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
 }
