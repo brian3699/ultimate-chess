@@ -140,7 +140,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         try{
             return myBoard.get(y).get(x).getPieceType();
         }catch (NullPointerException | IndexOutOfBoundsException e){
-            return "empty";
+            return "-";
         }
     }
 

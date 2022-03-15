@@ -70,6 +70,13 @@ public class ChessEngine {
         myBoard = new Board<>(width, height);
     }
 
+    public String getPieceType(int x, int y){
+        return myBoard.getPieceType(x,y);
+    }
+    public int getPieceTeam(int x, int y){
+        return myBoard.getPlayerNumber(x,y);
+    }
+
     // Set pieces in myBoard
     private void setPiece() throws CsvValidationException, IOException {
         for(int i=0; i<height; i++){

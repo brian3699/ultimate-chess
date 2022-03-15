@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/resources/pieceImage" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/resources/pieceImage" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Bishop.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Bishop1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Bishop2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/CKing2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Empty.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Empty0.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Empty1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Empty2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/King.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/King1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/King2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Knight.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Knight1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Knight2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Men2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Pawn.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Pawn1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Pawn2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Queen.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Queen1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Queen2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Rook.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Rook1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Rook2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Santa.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Santa1.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/java/view/resources/piece/Santa2.png" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/pieceImage" charset="ISO-8859-1" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

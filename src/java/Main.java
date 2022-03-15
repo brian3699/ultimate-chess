@@ -15,6 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         MainController mainController = new MainController();
         String gameLanguage = mainController.getUserLanguage();
-        ChessController chessController = new ChessController(gameLanguage);
+        ChessController chessController = new ChessController(gameLanguage, primaryStage);
+        chessController.startGame();
     }
 }

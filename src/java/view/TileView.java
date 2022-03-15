@@ -15,12 +15,14 @@ public class TileView extends Region {
     private final HBox myPiece;
     private final Image pieceImage;
 
-    public TileView(String pieceType) {
+    public TileView(String pieceType, int team) {
         // Initialize a resource bundle containing all magic values
         magicValueResource = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
         // HBox is used instead of a rectangle to set background
         myPiece = new HBox();
-        pieceImage = new Image(magicValueResource.getString(pieceType + "_Image"));
+        String imagePath = magicValueResource.getString(pieceType + "_Image"+team);
+        System.out.println(imagePath);
+        pieceImage = new Image(imagePath);
         setTile(pieceImage);
     }
 

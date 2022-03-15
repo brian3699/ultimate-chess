@@ -19,18 +19,23 @@ public class ChessView implements GameViewInterface{
         this.languageResource = languageResource;
         myBoard = new BoardView(clickMethod, rowCount, colCount);
         root = new VBox();
-        myGameScene = new Scene(root);
+        initializeGame();
     }
 
     private void initializeGame(){
         Text title = new Text(languageResource.getString("Chess"));
         Text scoreBoard = new Text(languageResource.getString("Player1") + 0 +
-                languageResource.getString("Player2") + 1);
+                languageResource.getString("Player2") + 0);
         root.getChildren().addAll(title, scoreBoard, myBoard);
     }
 
-    public void setTile(int rowNum, int colNum, String pieceType){
-        myBoard.setTile(rowNum, colNum, pieceType);
+    public Scene getGameScene(){
+        myGameScene = new Scene(root);
+        return myGameScene;
+    }
+
+    public void setTile(String pieceType, int team, int rowNum, int colNum){
+        myBoard.setTile(pieceType, team, rowNum, colNum);
     }
 
     @Override

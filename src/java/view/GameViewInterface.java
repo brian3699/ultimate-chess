@@ -1,5 +1,7 @@
 package view;
 
+import javafx.scene.Scene;
+
 import java.awt.*;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public interface GameViewInterface {
      * @param yNew row number of a destination tile
      */
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew);
+
 
     /**
      * Capture another piece
@@ -42,6 +45,8 @@ public interface GameViewInterface {
      */
     public void showMessage(String messageID);
 
+    public Scene getGameScene();
 
+    public void setTile(String pieceType, int team, int rowNum, int colNum);
 
 }

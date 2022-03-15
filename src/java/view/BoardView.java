@@ -26,8 +26,8 @@ public class BoardView extends GridPane {
         magicValueBundle = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
     }
 
-    public void setTile(int rowNum, int colNum, String pieceType){
-        TileView tile = new TileView(pieceType);
+    public void setTile(String pieceType, int team, int rowNum, int colNum){
+        TileView tile = new TileView(pieceType, team);
         addTileToBoard(tile, rowNum, colNum);
     }
 
@@ -42,7 +42,7 @@ public class BoardView extends GridPane {
     public void capturePiece(int xOrigin, int yOrigin, int xNew, int yNew){
         removeHighlight();
         TileView piece = boardArray[yOrigin][xOrigin];
-        TileView emptyTile = new TileView("-");
+        TileView emptyTile = new TileView("-", 0);
         addTileToBoard(piece, yNew, xNew);
         addTileToBoard(emptyTile, yOrigin, xOrigin);
     }
