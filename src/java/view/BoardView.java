@@ -76,6 +76,7 @@ public class BoardView {
     }
 
     private void addTileToBoard(TileView tile, int rowNum, int colNum){
+        tile.setOnMouseClicked(event -> clickMethod.accept(new Point(rowNum, colNum)));
         setTileColor(tile, rowNum, colNum);
         boardArray[rowNum][colNum] = tile;
         myBoard.add(tile, colNum, rowNum);
