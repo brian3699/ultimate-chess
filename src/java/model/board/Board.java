@@ -23,9 +23,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      * default constructor. Creates 8X8 board for 2 players
      */
     public Board(){
-        scoreTable = new int[3];
-        setCapturedPieceList(2);
-        setDefaultBoard(8,8);
+        this(8,8);
     }
 
     /**
@@ -34,8 +32,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      * @param height height of the board
      */
     public Board(int width, int height){
-        scoreTable = new int[2];
-        setCapturedPieceList(2);
+        scoreTable = new int[3];
+        setCapturedPieceList(3);
         setDefaultBoard(width, height);
     }
 

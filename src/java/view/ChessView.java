@@ -49,10 +49,6 @@ public class ChessView implements GameViewInterface{
         myBoard.movePiece(xOrigin, yOrigin, xNew, yNew);
     }
 
-    @Override
-    public void capturePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
-        myBoard.capturePiece(xOrigin, yOrigin, xNew, yNew);
-    }
 
     @Override
     public void updateScore(int player1, int player2) {

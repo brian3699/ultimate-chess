@@ -234,6 +234,10 @@ public class ChessEngine {
         turnCount += 1;
     }
 
+    public Point getCurrentPiece(){
+        return new Point(currentPiece.x, currentPiece.y);
+    }
+
 
 
 

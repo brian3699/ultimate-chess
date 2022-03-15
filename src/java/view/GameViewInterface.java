@@ -23,14 +23,6 @@ public interface GameViewInterface {
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew);
 
 
-    /**
-     * Capture another piece
-     * @param xOrigin column number of a piece
-     * @param yOrigin row number of a piece
-     * @param xNew column number of a destination tile
-     * @param yNew row number of a destination tile
-     */
-    public void capturePiece(int xOrigin, int yOrigin, int xNew, int yNew);
 
     /**
      * Update score on score board

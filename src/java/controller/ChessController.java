@@ -40,6 +40,7 @@ public class ChessController {
     }
 
     private void onTileClick(Point clickedTile){
+
         try{
             this.clickedTile = clickedTile;
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
@@ -63,11 +64,15 @@ public class ChessController {
     }
 
     private void movePiece(){
+        Point currentPoint = chessEngine.getCurrentPiece();
         chessEngine.movePiece(clickedTile.x, clickedTile.y);
+        chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
     }
 
     private void capturePiece(){
-        chessEngine.movePiece(clickedTile.x, clickedTile.y);
+        Point currentPoint = chessEngine.getCurrentPiece();
+        chessEngine.capturePiece(clickedTile.x, clickedTile.y);
+        chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
     }
 
     private void initializeBoard(){

@@ -33,17 +33,12 @@ public class BoardView extends GridPane {
 
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew){
         removeHighlight();
-        TileView piece = boardArray[yOrigin][xOrigin];
+        TileView currentPiece = boardArray[yOrigin][xOrigin];
         TileView destinationTile = boardArray[yNew][xNew];
-        addTileToBoard(piece, yNew, xNew);
-        addTileToBoard(destinationTile, yOrigin, xOrigin);
-    }
-
-    public void capturePiece(int xOrigin, int yOrigin, int xNew, int yNew){
-        removeHighlight();
-        TileView piece = boardArray[yOrigin][xOrigin];
         TileView emptyTile = new TileView("-", 0);
-        addTileToBoard(piece, yNew, xNew);
+        this.getChildren().remove(currentPiece);
+        this.getChildren().remove(destinationTile);
+        addTileToBoard(currentPiece, yNew, xNew);
         addTileToBoard(emptyTile, yOrigin, xOrigin);
     }
 
