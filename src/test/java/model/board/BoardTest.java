@@ -36,25 +36,25 @@ class BoardTest {
     @Test
     void testMoveToEmptyCell(){
         testBoard.setCell(1,ResourceBundle.getBundle(testResource.getString("King")), 3,3);
-        testBoard.move(3,3,4,4);
+        testBoard.movePiece(3,3,4,4);
         Assertions.assertEquals("King", testBoard.getPieceType(4,4));
         Assertions.assertEquals(1, testBoard.getPlayerNumber(4,4));
-
+        Assertions.assertEquals("-", testBoard.getPieceType(3,3));
+        Assertions.assertEquals(0, testBoard.getPlayerNumber(3,3));
     }
 
     @Test
     void testMoveBeyondBoard(){
         testBoard.setCell(1,ResourceBundle.getBundle(testResource.getString("Pawn")), 3,3);
-        Assertions.assertEquals(false, testBoard.move(3,3,15,15));
     }
 
     @Test
     void testMoveCapture(){
         testBoard.setCell(1,ResourceBundle.getBundle(testResource.getString("Pawn")), 3,3);
-        testBoard.setCell(2,ResourceBundle.getBundle(testResource.getString("King")), 3,4);
-        testBoard.move(3,3,3,4);
-        Assertions.assertEquals("Pawn", testBoard.getPieceType(3,4));
-        Assertions.assertEquals(1, testBoard.getPlayerNumber(3,4));
+        testBoard.setCell(2,ResourceBundle.getBundle(testResource.getString("King")), 4,4);
+        testBoard.capture(4,4,3,3);
+        Assertions.assertEquals("King", testBoard.getPieceType(3,3));
+        Assertions.assertEquals(2, testBoard.getPlayerNumber(3,3));
     }
 
 

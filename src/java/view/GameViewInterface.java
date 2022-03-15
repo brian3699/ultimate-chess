@@ -11,7 +11,7 @@ public interface GameViewInterface {
      * Highlight possible moves on the game board
      * @param possibleMoves List of possible moves
      */
-    public void showMove(List<Point> possibleMoves);
+    public void highlightPossibleMoves(List<Point> possibleMoves);
 
     /**
      * Move piece to empty tile

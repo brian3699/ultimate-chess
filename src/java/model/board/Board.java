@@ -23,7 +23,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      * default constructor. Creates 8X8 board for 2 players
      */
     public Board(){
-        scoreTable = new int[2];
+        scoreTable = new int[3];
         setCapturedPieceList(2);
         setDefaultBoard(8,8);
     }
@@ -73,44 +73,25 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     // capture a piece
-    private void capture(T movingPiece, T capPiece){
-        // update myBoard
-        movePiece(movingPiece, capPiece.getX(), capPiece.getY());
-
+    public void capture(int x1, int y1, int x2, int y2){
+        T movingPiece = myBoard.get(y1).get(x1);
+        T captured = myBoard.get(y2).get(x2);
         // update scoreTable and capturedPiece
-        capturedPiece.get(capPiece.getPlayerNumber()).add(capPiece);
+        capturedPiece.get(captured.getPlayerNumber()).add(captured);
         scoreTable[movingPiece.getPlayerNumber()] += 1;
+
+        // update myBoard
+        movePiece(x1, y1, x2, y2);
     }
 
     // move piece to a new cell
-    private void movePiece(T movingPiece, int x, int y){
-        myBoard.get(y).set(x, movingPiece);
+    public void movePiece(int x1, int y1, int x2, int y2){
+        T movingPiece = myBoard.get(y1).get(x1);
+        myBoard.get(y2).set(x2, movingPiece);
         myBoard.get(movingPiece.getY()).set(movingPiece.getX(), null);
     }
 
 
-    @Override
-    public boolean move(int x1, int y1, int x2, int y2) {
-        try {
-            // when it is not a valid move return false
-            if (!checkValidMove(x1, y1, x2, y2)) return false;
-
-            T currentCell = myBoard.get(y1).get(x1);
-            T destinationCell = myBoard.get(y2).get(x2);
-
-            if (destinationCell != null) {
-                // if there is a piece in the destination cell, capture it
-                capture(currentCell, destinationCell);
-            } else {
-                // if the destination cell is empty, move the piece to this cell
-                movePiece(currentCell, x2, y2);
-            }
-
-            return true;
-        }catch (IndexOutOfBoundsException e){
-            return false;
-        }
-    }
 
     // check whether it is a valid move
     private boolean checkValidMove(int x1, int y1, int x2, int y2){

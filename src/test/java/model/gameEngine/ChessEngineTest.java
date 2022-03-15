@@ -25,6 +25,7 @@ class ChessEngineTest {
     @Test
     void testPawnMoveBlack() throws InvocationTargetException, IllegalAccessException {
         ArrayList<Point> moves = chessEngine.getValidMoves(5,1);
+        System.out.println(chessEngine.getPieceTeam(5,1));
         Assertions.assertEquals("5, 2",moves.get(0).x + ", " + moves.get(0).y );
         Assertions.assertEquals("5, 3",moves.get(1).x + ", " + moves.get(1).y );
 

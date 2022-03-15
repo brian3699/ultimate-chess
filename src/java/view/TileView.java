@@ -21,7 +21,6 @@ public class TileView extends Region {
         // HBox is used instead of a rectangle to set background
         myPiece = new HBox();
         String imagePath = magicValueResource.getString(pieceType + "_Image"+team);
-        System.out.println(imagePath);
         pieceImage = new Image(imagePath);
         setTile(pieceImage);
     }

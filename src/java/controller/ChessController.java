@@ -3,24 +3,33 @@ package controller;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
+import model.util.ReflectionHandler;
 import view.ChessView;
 import view.GameViewInterface;
 
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ChessController {
+    private static final String CLASS_PATH = "controller.ChessController";
     private static final String LANGUAGE_RESOURCE_DIRECTORY = "view.resources.language.";
     private final ResourceBundle languageResource;
     private final Stage myStage;
     private GameViewInterface chessView;
     private ChessEngine chessEngine;
+    private final ReflectionHandler reflectionHandler;
+    private Point clickedTile;
+
 
 
     public ChessController(String gameLanguage, Stage stage){
         myStage = stage;
         languageResource = makeResourceBundle(LANGUAGE_RESOURCE_DIRECTORY + gameLanguage);
+        reflectionHandler = new ReflectionHandler();
         this.chessEngine = new ChessEngine();
-        this.chessView = new ChessView(languageResource, e -> startGame(), 8, 8);
+        this.chessView = new ChessView(languageResource, e -> onTileClick((Point) e), 8, 8);
     }
 
     public void startGame(){
@@ -28,6 +37,37 @@ public class ChessController {
         Scene scene = chessView.getGameScene();
         myStage.setScene(scene);
         myStage.show();
+    }
+
+    private void onTileClick(Point clickedTile){
+        try{
+            this.clickedTile = clickedTile;
+            String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
+            reflectionHandler.handleMethod(clickType,CLASS_PATH).invoke(ChessController.this);
+        }catch (InvocationTargetException | IllegalAccessException e){
+            e.printStackTrace();
+            chessView.showMessage("errorClick");
+        }
+
+    }
+
+    private void clickOnPiece(){
+        System.out.println(clickedTile.x+ ","+ clickedTile.y+": success");
+        ArrayList<Point> validMoves = chessEngine.getValidMoves(clickedTile.x, clickedTile.y);
+        System.out.println("success");
+        chessView.highlightPossibleMoves(validMoves);
+    }
+
+    private void errorClick(){
+        chessView.showMessage("errorClick");
+    }
+
+    private void movePiece(){
+        chessEngine.movePiece(clickedTile.x, clickedTile.y);
+    }
+
+    private void capturePiece(){
+        chessEngine.movePiece(clickedTile.x, clickedTile.y);
     }
 
     private void initializeBoard(){

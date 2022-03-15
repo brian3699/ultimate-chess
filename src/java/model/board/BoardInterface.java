@@ -9,16 +9,10 @@ import java.util.ResourceBundle;
  */
 public interface BoardInterface {
 
-    /**
-     * moves the piece in the grid
-     *
-     * @param x1 column number of the piece
-     * @param y1 row number of the piece
-     * @param x2 column number of the cell the piece will be moved to
-     * @param y2 row number of the cell the piece will be moved to
-     * @return true if the move could be made, false if not
-     */
-    boolean move(int x1, int y1, int x2, int y2);
+    public void capture(int x1, int y1, int x2, int y2);
+
+    // move piece to a new cell
+    public void movePiece(int x1, int y1, int x2, int y2);
 
     /**
      * add piece to a cell

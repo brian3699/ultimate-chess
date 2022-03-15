@@ -7,11 +7,12 @@ import model.board.Board;
 import model.piece.Piece;
 import model.util.ReflectionHandler;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,9 @@ public class ChessEngine {
     private CSVReader teamReader;
     private Point currentPiece;
     private final ReflectionHandler reflectionHandler;
+    private int currentPlayer;
+    private int turnCount;
+    private List<Point> possibleMoves;
 
     /**
      * sets the board using default file
@@ -45,6 +49,8 @@ public class ChessEngine {
      * @param teamFilePath file path to a csv file containing the team number of each cell
      */
     public ChessEngine(String boardFilePath, String teamFilePath) {
+        currentPlayer = 1;
+        turnCount = 0;
         reflectionHandler = new ReflectionHandler();
         try{
             initializeBoard(boardFilePath, teamFilePath);
@@ -117,41 +123,41 @@ public class ChessEngine {
 
     }
 
-    private ArrayList<Point> getPawnMoves(){
+    private List<Point> getPawnMoves(){
         int x = currentPiece.x;
         int y = currentPiece.y;
-        ArrayList<Point> moves = getSimpleMoves(x, y);
+        List<Point> moves = getSimpleMoves(x, y);
         int player = myBoard.getPlayerNumber(x,y);
-        if(player == 1 && y == 1) moves.add(new Point(x, y+2));
-        if(player == 2 && y == height - 2) moves.add(new Point(x, y - 2));
+        if(player == 1 && y == height - 2) moves.add(new Point(x, y - 2));
+        if(player == 2 && y == 1) moves.add(new Point(x, y + 2));
         return moves;
     }
 
-    private ArrayList<Point> getKnightMoves(){
+    private List<Point> getKnightMoves(){
         return getSimpleMoves(currentPiece.x, currentPiece.y);
     }
 
-    private ArrayList<Point> getBishopMoves(){
+    private List<Point> getBishopMoves(){
         return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
-    private ArrayList<Point> getRookMoves() {
+    private List<Point> getRookMoves() {
         return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
-    private ArrayList<Point> getKingMoves() {
+    private List<Point> getKingMoves() {
         return getSimpleMoves(currentPiece.x,currentPiece.y);
     }
 
-    private ArrayList<Point> getQueenMoves() {
+    private List<Point> getQueenMoves() {
         return getComplexMoves(currentPiece.x, currentPiece.y);
     }
 
 
 
-    private ArrayList<Point> getSimpleMoves(int x, int y){
+    private List<Point> getSimpleMoves(int x, int y){
         String team = Integer.toString(myBoard.getPlayerNumber(x,y));
-        ArrayList<Point> possibleMoves = new ArrayList<>();
+        possibleMoves = new ArrayList<>();
         ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
         // enumerate all possible moves of a piece
 
@@ -169,12 +175,13 @@ public class ChessEngine {
             }
         }
         possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
+        currentPlayer = myBoard.getPlayerNumber(x,y);
         return possibleMoves;
     }
 
-    private ArrayList<Point> getComplexMoves(int x, int y){
+    private List<Point> getComplexMoves(int x, int y){
         String team = Integer.toString(myBoard.getPlayerNumber(x,y));
-        ArrayList<Point> possibleMoves = new ArrayList<>();
+        possibleMoves = new ArrayList<>();
         ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
         // enumerate all possible moves of a piece
 
@@ -194,8 +201,40 @@ public class ChessEngine {
             }
         }
         possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
+        currentPlayer = myBoard.getPlayerNumber(x,y);
         return possibleMoves;
     }
+
+    public String clickType(int x, int y){
+        System.out.println(y + "," + x);
+        System.out.println(currentPlayer);
+        System.out.println(myBoard.getPlayerNumber(x, y));
+
+        if (currentPlayer == myBoard.getPlayerNumber(x, y)) return "clickOnPiece";
+        if (possibleMoves == null) return "errorClick";
+        for (Point move : possibleMoves) {
+            if (move.x == x && move.y == y && myBoard.getPlayerNumber(x, y) == 0) return "movePiece";
+            if (move.x == x && move.y == y && myBoard.getPlayerNumber(x, y) != 0) return "capturePiece";
+        }
+        return "errorClick";
+    }
+
+    public void movePiece(int x, int y){
+        myBoard.movePiece(currentPiece.x, currentPiece.y, x, y);
+        nextTurn();
+    }
+
+    public void capturePiece(int x, int y){
+        myBoard.capture(currentPiece.x, currentPiece.y, x, y);
+        nextTurn();
+    }
+
+    private void nextTurn(){
+        currentPlayer = currentPlayer % 2 + 1;
+        turnCount += 1;
+    }
+
+
 
 
 }

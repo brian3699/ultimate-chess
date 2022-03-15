@@ -53,18 +53,20 @@ public class BoardView extends GridPane {
      * @param possibleMoves List of points with possible moves.
      */
     public void highlightPossibleMoves(List<Point> possibleMoves) {
+        if(this.possibleMoves != null) removeHighlight();
         this.possibleMoves = possibleMoves;
         for (Point move : possibleMoves) {
             TileView tile = boardArray[move.y][move.x];
-            tile.setOnMouseClicked(event -> clickMethod.accept(move));
-            tile.setBackground(3);
-            this.add(tile, move.y, move.x);
+            this.getChildren().remove(tile);
+            tile.setBackground(2);
+            this.add(tile, move.x, move.y);
         }
     }
 
     private void removeHighlight(){
         for (Point move : possibleMoves) {
             TileView tile = boardArray[move.y][move.x];
+            this.getChildren().remove(tile);
             addTileToBoard(tile, move.y, move.x);
         }
     }
@@ -75,7 +77,7 @@ public class BoardView extends GridPane {
     }
 
     private void addTileToBoard(TileView tile, int rowNum, int colNum){
-        tile.setOnMouseClicked(event -> clickMethod.accept(new Point(rowNum, colNum)));
+        tile.setOnMouseClicked(event -> clickMethod.accept(new Point(colNum, rowNum)));
         setTileColor(tile, rowNum, colNum);
         boardArray[rowNum][colNum] = tile;
         this.add(tile, colNum, rowNum);

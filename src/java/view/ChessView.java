@@ -1,6 +1,7 @@
 package view;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -39,7 +40,7 @@ public class ChessView implements GameViewInterface{
     }
 
     @Override
-    public void showMove(List<Point> possibleMoves) {
+    public void highlightPossibleMoves(List<Point> possibleMoves) {
         myBoard.highlightPossibleMoves(possibleMoves);
     }
 
@@ -60,6 +61,9 @@ public class ChessView implements GameViewInterface{
 
     @Override
     public void showMessage(String messageID) {
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(languageResource.getString(messageID));
+        alert.setContentText(languageResource.getString(messageID));
+        alert.showAndWait();
     }
 }
