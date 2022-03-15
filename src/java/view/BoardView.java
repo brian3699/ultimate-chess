@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-public class BoardView {
+public class BoardView extends GridPane {
 
     private static final String MAGIC_VALUE_RESOURCE_PATH = "view.resources.MagicValues";
 
-    private final GridPane myBoard;
     private final int rowCount;
     private final int colCount;
     private final Consumer clickMethod;
@@ -24,7 +23,6 @@ public class BoardView {
         this.rowCount = rowCount;
         this.colCount = colCount;
         boardArray = new TileView[rowCount][colCount];
-        myBoard = new GridPane();
         magicValueBundle = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
     }
 
@@ -58,8 +56,9 @@ public class BoardView {
         this.possibleMoves = possibleMoves;
         for (Point move : possibleMoves) {
             TileView tile = boardArray[move.y][move.x];
+            tile.setOnMouseClicked(event -> clickMethod.accept(move));
             tile.setBackground(3);
-            myBoard.add(tile, move.y, move.x);
+            this.add(tile, move.y, move.x);
         }
     }
 
@@ -79,6 +78,6 @@ public class BoardView {
         tile.setOnMouseClicked(event -> clickMethod.accept(new Point(rowNum, colNum)));
         setTileColor(tile, rowNum, colNum);
         boardArray[rowNum][colNum] = tile;
-        myBoard.add(tile, colNum, rowNum);
+        this.add(tile, colNum, rowNum);
     }
 }
