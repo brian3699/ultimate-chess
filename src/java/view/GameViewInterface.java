@@ -24,12 +24,6 @@ public interface GameViewInterface {
 
 
 
-    /**
-     * Update score on score board
-     * @param player1 player1 score
-     * @param player2 player2 score
-     */
-    public void updateScore(int player1, int player2);
 
     /**
      * Display message to the user
@@ -42,5 +36,9 @@ public interface GameViewInterface {
     public void setTile(String pieceType, int team, int rowNum, int colNum);
 
     public void updateCurrentPlayer();
+
+    public void updatePlayerScore(int playerNumber, int score);
+
+    public void addCapturedPiece(int playerNumber, String pieceType);
 
 }

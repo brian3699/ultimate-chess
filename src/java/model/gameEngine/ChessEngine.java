@@ -11,12 +11,8 @@ import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-
+import java.util.*;
 
 
 public class ChessEngine {
@@ -34,6 +30,7 @@ public class ChessEngine {
     private final ReflectionHandler reflectionHandler;
     private int currentPlayer;
     private int turnCount;
+    private Map<Integer, Integer> scoreBoard;
     private List<Point> possibleMoves;
 
     /**
@@ -50,8 +47,8 @@ public class ChessEngine {
      */
     public ChessEngine(String boardFilePath, String teamFilePath) {
         currentPlayer = 1;
-        turnCount = 0;
         reflectionHandler = new ReflectionHandler();
+        initializeScoreBoard();
         try{
             initializeBoard(boardFilePath, teamFilePath);
             setPiece();
@@ -74,6 +71,12 @@ public class ChessEngine {
         boardReader = new CSVReader(new FileReader(boardFilePath));
         // initialize Board
         myBoard = new Board<>(width, height);
+    }
+
+    private void initializeScoreBoard(){
+        scoreBoard = new HashMap<>();
+        scoreBoard.put(1,0);
+        scoreBoard.put(2,0);
     }
 
     public String getPieceType(int x, int y){
@@ -147,7 +150,8 @@ public class ChessEngine {
             }
             returnList.add(move);
         }
-        return returnList;
+        possibleMoves = returnList;
+        return possibleMoves;
     }
 
     private List<Point> getKnightMoves(){
@@ -238,6 +242,8 @@ public class ChessEngine {
     }
 
     public void capturePiece(int x, int y){
+        int score = myBoard.getPiecePoint(x, y);
+        scoreBoard.put(currentPlayer, scoreBoard.get(currentPlayer) + score);
         myBoard.capture(currentPiece.x, currentPiece.y, x, y);
         nextTurn();
     }
@@ -251,8 +257,11 @@ public class ChessEngine {
         return new Point(currentPiece.x, currentPiece.y);
     }
 
-    public int getCurrentPlayer(){
-        return currentPlayer;
+    public int getUserScore(int playerNumber){
+        return scoreBoard.get(playerNumber);
     }
+
+    public int getCurrentPlayer(){return currentPlayer;}
+
 
 }

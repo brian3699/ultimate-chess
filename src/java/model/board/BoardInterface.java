@@ -42,4 +42,6 @@ public interface BoardInterface {
      * @return return the player number of a piece
      */
     public int getPlayerNumber(int x, int y);
+
+    public int getPiecePoint(int x, int y);
 }

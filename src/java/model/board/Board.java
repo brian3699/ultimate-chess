@@ -76,7 +76,6 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         T captured = myBoard.get(y2).get(x2);
         // update scoreTable and capturedPiece
         capturedPiece.get(captured.getPlayerNumber()).add(captured);
-        scoreTable[movingPiece.getPlayerNumber()] += 1;
 
         // update myBoard
         movePiece(x1, y1, x2, y2);
@@ -120,6 +119,15 @@ public class Board <T extends PieceInterface> implements BoardInterface{
             return myBoard.get(y).get(x).getPieceType();
         }catch (NullPointerException | IndexOutOfBoundsException e){
             return "-";
+        }
+    }
+
+    @Override
+    public int getPiecePoint(int x, int y){
+        try{
+            return myBoard.get(y).get(x).getPieceScore();
+        }catch (NullPointerException | IndexOutOfBoundsException e){
+            return 0;
         }
     }
 
