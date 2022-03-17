@@ -86,7 +86,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     public void movePiece(int x1, int y1, int x2, int y2){
         T movingPiece = myBoard.get(y1).get(x1);
         myBoard.get(y2).set(x2, movingPiece);
-        myBoard.get(movingPiece.getY()).set(movingPiece.getX(), null);
+        myBoard.get(y1).set(x1, null);
     }
 
 
@@ -111,7 +111,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
         myBoard.get(y).set(x, (T) new Piece(pieceInfo.getString("name"),
-                Integer.parseInt(pieceInfo.getString("point")), playerNumber, x, y));
+                Integer.parseInt(pieceInfo.getString("point")), playerNumber));
     }
 
     @Override

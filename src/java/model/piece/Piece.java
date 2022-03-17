@@ -3,8 +3,6 @@ package model.piece;
 public class Piece implements PieceInterface{
     private final int pieceScore;
     private final String pieceType;
-    private final int xLocation;
-    private final int yLocation;
     private final int playerNumber;
 
 
@@ -15,16 +13,12 @@ public class Piece implements PieceInterface{
     public Piece(){
         pieceScore = 0;
         pieceType = null;
-        xLocation = 0;
-        yLocation = 0;
         playerNumber = 0;
     }
 
-    public Piece(String pieceType, int pieceScore, int playerNumber, int x, int y){
+    public Piece(String pieceType, int pieceScore, int playerNumber){
         this.pieceScore = pieceScore;
         this.pieceType = pieceType;
-        this.xLocation = x;
-        this.yLocation = y;
         this.playerNumber = playerNumber;
     }
 
@@ -44,14 +38,5 @@ public class Piece implements PieceInterface{
         return playerNumber;
     }
 
-    @Override
-    public int getX() {
-        return xLocation;
-    }
-
-    @Override
-    public int getY() {
-        return yLocation;
-    }
 
 }

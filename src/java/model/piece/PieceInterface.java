@@ -21,16 +21,5 @@ public interface PieceInterface {
      */
     int getPlayerNumber();
 
-    /**
-     * return x coordinate
-     * @return x coordinate
-     */
-    int getX();
-
-    /**
-     * return y coordinate
-     * @return y coordinate
-     */
-    int getY();
 
 }

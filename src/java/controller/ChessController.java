@@ -46,16 +46,13 @@ public class ChessController {
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
             reflectionHandler.handleMethod(clickType,CLASS_PATH).invoke(ChessController.this);
         }catch (InvocationTargetException | IllegalAccessException e){
-            e.printStackTrace();
             chessView.showMessage("errorClick");
         }
 
     }
 
     private void clickOnPiece(){
-        System.out.println(clickedTile.x+ ","+ clickedTile.y+": success");
         ArrayList<Point> validMoves = chessEngine.getValidMoves(clickedTile.x, clickedTile.y);
-        System.out.println("success");
         chessView.highlightPossibleMoves(validMoves);
     }
 
