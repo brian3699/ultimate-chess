@@ -1,11 +1,14 @@
 package view;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.util.List;
@@ -27,7 +30,7 @@ public class ChessView implements GameViewInterface{
     private HBox player1Captured;
     private HBox player2Captured;
 
-
+    private Timeline myAnimation;
     private BoardView myBoard;
     private Scene myGameScene;
     private VBox root;
@@ -59,6 +62,7 @@ public class ChessView implements GameViewInterface{
         player2Header = makeHeader("Player2", player2Timer, player2Score, player2Captured, 2);
 
         root.getChildren().addAll(player2Header, myBoard, player1Header);
+        startTimer();
     }
 
     public HBox makeHeader(String userName, Text playerTimer, Text score, HBox playerCaptured, int playerNumber){
@@ -124,6 +128,26 @@ public class ChessView implements GameViewInterface{
         }
     }
 
+    private void step(){
+        Text timer;
+        if(currentPlayer == 1) timer = player1Timer;
+        else timer = player2Timer;
+        int time = Integer.parseInt(timer.getText()) - 1;
+        if(time == 0){
+            myAnimation.stop();
+            showMessage("timeExpire");
+        }
+        timer.setText(time+"");
+    }
+
+    // Start new animation to show search algorithm's steps
+    private void startTimer() {
+        myAnimation = new Timeline();
+        myAnimation.setCycleCount(Timeline.INDEFINITE);
+        myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e -> step()));
+        myAnimation.play();
+    }
+
 
 
 
@@ -143,6 +167,8 @@ public class ChessView implements GameViewInterface{
 
     @Override
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
+        player1Timer.setText("60");
+        player2Timer.setText("60");
         myBoard.movePiece(xOrigin, yOrigin, xNew, yNew);
     }
 
@@ -154,4 +180,5 @@ public class ChessView implements GameViewInterface{
         alert.setContentText(languageResource.getString(messageID));
         alert.showAndWait();
     }
+
 }
