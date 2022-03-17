@@ -251,4 +251,8 @@ public class ChessEngine {
         return new Point(currentPiece.x, currentPiece.y);
     }
 
+    public int getCurrentPlayer(){
+        return currentPlayer;
+    }
+
 }

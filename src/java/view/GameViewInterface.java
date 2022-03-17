@@ -41,4 +41,6 @@ public interface GameViewInterface {
 
     public void setTile(String pieceType, int team, int rowNum, int colNum);
 
+    public void updateCurrentPlayer();
+
 }

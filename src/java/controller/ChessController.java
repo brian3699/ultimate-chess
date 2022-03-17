@@ -64,12 +64,14 @@ public class ChessController {
         Point currentPoint = chessEngine.getCurrentPiece();
         chessEngine.movePiece(clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
+        chessView.updateCurrentPlayer();
     }
 
     private void capturePiece(){
         Point currentPoint = chessEngine.getCurrentPiece();
         chessEngine.capturePiece(clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
+        chessView.updateCurrentPlayer();
     }
 
     private void initializeBoard(){
