@@ -32,6 +32,12 @@ public class ChessEngine {
     private int turnCount;
     private Map<Integer, Integer> scoreBoard;
     private List<Point> possibleMoves;
+    private int[][] myPlayerBoard;
+    private boolean[][] player1PossibleMoves;
+    private boolean[][] player2PossibleMoves;
+
+
+
 
     /**
      * sets the board using default file
@@ -64,6 +70,7 @@ public class ChessEngine {
         // create csv file reader
         boardReader = new CSVReader(new FileReader(boardFilePath));
         teamReader = new CSVReader(new FileReader(teamFilePath));
+
         // get width and height
         width = boardReader.peek().length;
         height = (int) boardReader.readAll().size();
@@ -71,6 +78,8 @@ public class ChessEngine {
         boardReader = new CSVReader(new FileReader(boardFilePath));
         // initialize Board
         myBoard = new Board<>(width, height);
+
+        myPlayerBoard = new int[height][width];
     }
 
     private void initializeScoreBoard(){
@@ -88,6 +97,7 @@ public class ChessEngine {
 
     // Set pieces in myBoard
     private void setPiece() throws CsvValidationException, IOException {
+
         for(int i=0; i<height; i++){
             // array containing the types of the pieces
             String[] pieceLine = boardReader.readNext();
@@ -101,6 +111,7 @@ public class ChessEngine {
                     // team number of the piece
                     int teamNumber = Integer.parseInt(teamLine[j]);
                     myBoard.setCell(teamNumber, pieceDataResource, j, i);
+                    myPlayerBoard[i][j] = teamNumber;
                 }catch (MissingResourceException e){
                     break;
                 }
@@ -123,7 +134,6 @@ public class ChessEngine {
         }catch(InvocationTargetException | IllegalAccessException e){
             return null;
         }
-
     }
 
 
@@ -140,7 +150,6 @@ public class ChessEngine {
             int xMove = move.x - x;
             int yMove = move.y - y;
             int playerNumber = myBoard.getPlayerNumber(move.x, move.y);
-            System.out.println(xMove + ","+yMove+","+playerNumber);
             if(playerNumber == 0){
                 if((xMove == 1 && yMove == -1) | (xMove == -1 && yMove == -1) | (xMove == 1 && yMove == 1) |
                         (xMove == -1 && yMove == 1)) continue;
@@ -167,7 +176,12 @@ public class ChessEngine {
     }
 
     private List<Point> getKingMoves() {
-        return getSimpleMoves(currentPiece.x,currentPiece.y);
+        if(currentPlayer == myBoard.getPlayerNumber(currentPiece.x, currentPiece.y)) {
+            possibleMoves =  removeCheckMoves(getSimpleMoves(currentPiece.x,currentPiece.y), currentPlayer);
+            return possibleMoves;
+        }else {
+            return getSimpleMoves(currentPiece.x, currentPiece.y);
+        }
     }
 
     private List<Point> getQueenMoves() {
@@ -178,6 +192,7 @@ public class ChessEngine {
 
     private List<Point> getSimpleMoves(int x, int y){
         String team = ""+ myBoard.getPlayerNumber(x,y);
+        int teamNumber = Integer.parseInt(team);
         possibleMoves = new ArrayList<>();
         ResourceBundle pieceMoves = ResourceBundle.getBundle(CHESS_PIECE_DATA.getString(myBoard.getPieceType(x,y)));
         // enumerate all possible moves of a piece
@@ -196,7 +211,6 @@ public class ChessEngine {
             }
         }
         possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
-        currentPlayer = myBoard.getPlayerNumber(x,y);
         return possibleMoves;
     }
 
@@ -222,7 +236,6 @@ public class ChessEngine {
             }
         }
         possibleMoves.removeIf(move -> move.x < 0 || move.x > width - 1 || move.y < 0 || move.y > height - 1);
-        currentPlayer = myBoard.getPlayerNumber(x,y);
         return possibleMoves;
     }
 
@@ -237,20 +250,58 @@ public class ChessEngine {
     }
 
     public void movePiece(int x, int y){
+        myPlayerBoard[currentPiece.y][currentPiece.x] = 0;
+        myPlayerBoard[y][x] = currentPlayer;
         myBoard.movePiece(currentPiece.x, currentPiece.y, x, y);
         nextTurn();
     }
 
     public void capturePiece(int x, int y){
         int score = myBoard.getPiecePoint(x, y);
+        myPlayerBoard[y][x] = currentPlayer;
         scoreBoard.put(currentPlayer, scoreBoard.get(currentPlayer) + score);
         myBoard.capture(currentPiece.x, currentPiece.y, x, y);
         nextTurn();
     }
 
     private void nextTurn(){
+        possibleMoves = null;
         currentPlayer = currentPlayer % 2 + 1;
         turnCount += 1;
+    }
+
+    public boolean[][] getAllMovableTile(int playerNumber){
+        ArrayList<Point> playerAllPossibleMoves = new ArrayList<>();
+        for(int i = 0; i < height; i ++){
+            for(int j = 0; j < width; j++){
+                if(myPlayerBoard[i][j] == playerNumber){
+                    playerAllPossibleMoves.addAll(getValidMoves(j, i));
+                }
+            }
+        }
+        boolean[][] playerBoard = new boolean[height][width];
+        if(playerNumber == 1) player1PossibleMoves = playerBoard;
+        else if(playerNumber == 2) player2PossibleMoves = playerBoard;
+
+        for(Point move : playerAllPossibleMoves){
+            playerBoard[move.y][move.x] = true;
+        }
+
+        return playerBoard;
+    }
+
+    private List<Point> removeCheckMoves(List<Point> possibleMoves, int playerNumber){
+            Point bufferPiece = currentPiece;
+            int opponent = playerNumber % 2 + 1;
+            boolean[][] opponentMoves = getAllMovableTile(opponent);
+
+            List<Point> returnList = new ArrayList<>();
+
+            for(Point move : possibleMoves){
+                if(!opponentMoves[move.y][move.x]) returnList.add(move);
+            }
+            currentPiece = bufferPiece;
+            return returnList;
     }
 
     public Point getCurrentPiece(){

@@ -14,6 +14,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     // Instances of pieces will be stored in this List
     private List<List<T>> myBoard;
     private List<List<T>> capturedPiece;
+    private List<List<T>> playerPieces;
+
     private int[] scoreTable;
     private int width;
     private int height;
@@ -33,8 +35,9 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      */
     public Board(int width, int height){
         scoreTable = new int[3];
-        setCapturedPieceList(3);
+        setPieceList(3);
         setDefaultBoard(width, height);
+
     }
 
     /**
@@ -45,7 +48,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      */
     public Board(int numPlayers, int width, int height){
         scoreTable = new int[numPlayers];
-        setCapturedPieceList(numPlayers);
+        setPieceList(numPlayers);
         setDefaultBoard(width, height);
     }
 
@@ -63,9 +66,10 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     // initializes capturedPiece
-    private void setCapturedPieceList(int numPlayers){
+    private void setPieceList(int numPlayers){
         capturedPiece = new ArrayList<>();
         for(int i = 0; i < numPlayers; i++){
+            capturedPiece.add(new ArrayList<>());
             capturedPiece.add(new ArrayList<>());
         }
     }
@@ -75,6 +79,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         T movingPiece = myBoard.get(y1).get(x1);
         T captured = myBoard.get(y2).get(x2);
         // update scoreTable and capturedPiece
+        playerPieces.get(captured.getPlayerNumber()).remove(captured);
         capturedPiece.get(captured.getPlayerNumber()).add(captured);
 
         // update myBoard
@@ -89,28 +94,13 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
 
-
-    // check whether it is a valid move
-    private boolean checkValidMove(int x1, int y1, int x2, int y2){
-        /*
-        // if the current cell is empty return false
-        if(myBoard.get(y1).get(x1) != null) return false;
-        for(Point coordinate : getPossibleMoves(x1, y1)){
-            // if the target cell is in the possible moves of the current cell, return true
-            if (coordinate.x == x2 && coordinate.y == y2 ) return true;
-        }
-        // return false otherwise
-        return false;
-
-         */
-        return true;
-    }
-
     @Override
     public void setCell(int playerNumber, ResourceBundle pieceInfo, int x, int y) {
         // TODO : need to finish this part after completing Piece classes
-        myBoard.get(y).set(x, (T) new Piece(pieceInfo.getString("name"),
-                Integer.parseInt(pieceInfo.getString("point")), playerNumber));
+        T newPiece = (T) new Piece(pieceInfo.getString("name"),
+                Integer.parseInt(pieceInfo.getString("point")), playerNumber);
+        capturedPiece.get(playerNumber).add(newPiece);
+        myBoard.get(y).set(x, newPiece);
     }
 
     @Override
@@ -130,6 +120,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
             return 0;
         }
     }
+
+
 
 
     @Override

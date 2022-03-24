@@ -86,8 +86,9 @@ public class ChessView implements GameViewInterface{
 
     private Node makeTimer(Text playerTimer){
         Text remainingTime = new Text(languageResource.getString("Remaining"));
+        Text seconds = new Text(languageResource.getString("Seconds"));
 
-        return new HBox(remainingTime, playerTimer);
+        return new HBox(remainingTime, playerTimer, seconds);
     }
 
     private Node makeScoreBoard(Text score, HBox playerCapturedPieces){
@@ -134,13 +135,12 @@ public class ChessView implements GameViewInterface{
         else timer = player2Timer;
         int time = Integer.parseInt(timer.getText()) - 1;
         if(time == 0){
-            myAnimation.stop();
+            myAnimation = null;
             showMessage("timeExpire");
         }
         timer.setText(time+"");
     }
 
-    // Start new animation to show search algorithm's steps
     private void startTimer() {
         myAnimation = new Timeline();
         myAnimation.setCycleCount(Timeline.INDEFINITE);

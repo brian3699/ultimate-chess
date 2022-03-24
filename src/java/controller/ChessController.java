@@ -44,6 +44,7 @@ public class ChessController {
         try{
             this.clickedTile = clickedTile;
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
+            System.out.println(clickType);
             reflectionHandler.handleMethod(clickType,CLASS_PATH).invoke(ChessController.this);
         }catch (InvocationTargetException | IllegalAccessException e){
             e.printStackTrace();
