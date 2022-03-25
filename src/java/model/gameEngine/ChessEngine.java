@@ -130,6 +130,8 @@ public class ChessEngine {
             currentPiece = new Point(x,y);
             String methodName = "get" + myBoard.getPieceType(x,y) + "Moves";
             // invokes different method for each chess piece type
+            System.out.println(""+x+y);
+            System.out.println(reflectionHandler.handleMethod(methodName,CLASS_PATH));
             return (ArrayList<Point>) reflectionHandler.handleMethod(methodName,CLASS_PATH).invoke(ChessEngine.this);
         }catch(InvocationTargetException | IllegalAccessException e){
             return null;
@@ -258,6 +260,7 @@ public class ChessEngine {
 
     public void capturePiece(int x, int y){
         int score = myBoard.getPiecePoint(x, y);
+        myPlayerBoard[currentPiece.y][currentPiece.x] = 0;
         myPlayerBoard[y][x] = currentPlayer;
         scoreBoard.put(currentPlayer, scoreBoard.get(currentPlayer) + score);
         myBoard.capture(currentPiece.x, currentPiece.y, x, y);
@@ -313,6 +316,19 @@ public class ChessEngine {
     }
 
     public int getCurrentPlayer(){return currentPlayer;}
+
+    public boolean detectCheck(){
+        int opponent = currentPlayer % 2 + 1;
+        boolean[][] opponentMoves = getAllMovableTile(opponent);
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                if(opponentMoves[j][i] && myBoard.getPieceType(i,j).equals("King") && myBoard.getPlayerNumber(i,j) == currentPlayer){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
 }

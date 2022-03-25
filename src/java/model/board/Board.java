@@ -79,7 +79,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         T movingPiece = myBoard.get(y1).get(x1);
         T captured = myBoard.get(y2).get(x2);
         // update scoreTable and capturedPiece
-        playerPieces.get(captured.getPlayerNumber()).remove(captured);
+        //playerPieces.get(captured.getPlayerNumber()).remove(captured);
         capturedPiece.get(captured.getPlayerNumber()).add(captured);
 
         // update myBoard

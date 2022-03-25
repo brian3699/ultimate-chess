@@ -44,7 +44,6 @@ public class ChessController {
         try{
             this.clickedTile = clickedTile;
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
-            System.out.println(clickType);
             reflectionHandler.handleMethod(clickType,CLASS_PATH).invoke(ChessController.this);
         }catch (InvocationTargetException | IllegalAccessException e){
             e.printStackTrace();
@@ -67,6 +66,7 @@ public class ChessController {
         chessEngine.movePiece(clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
+        System.out.println(chessEngine.detectCheck());
     }
 
     private void capturePiece(){
@@ -77,6 +77,7 @@ public class ChessController {
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
         chessView.updatePlayerScore(currentPlayer, chessEngine.getUserScore(currentPlayer));
+        System.out.println(chessEngine.detectCheck());
     }
 
     private void initializeBoard(){
