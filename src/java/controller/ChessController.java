@@ -1,5 +1,6 @@
 package controller;
 
+import com.opencsv.exceptions.CsvException;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
@@ -8,6 +9,7 @@ import view.ChessView;
 import view.GameViewInterface;
 
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -24,7 +26,7 @@ public class ChessController {
 
 
 
-    public ChessController(String gameLanguage, Stage stage){
+    public ChessController(String gameLanguage, Stage stage) throws IOException, CsvException {
         myStage = stage;
         languageResource = makeResourceBundle(LANGUAGE_RESOURCE_DIRECTORY + gameLanguage);
         reflectionHandler = new ReflectionHandler();
@@ -63,7 +65,7 @@ public class ChessController {
 
     private void movePiece(){
         Point currentPoint = chessEngine.getCurrentPiece();
-        chessEngine.movePiece(clickedTile.x, clickedTile.y);
+        chessEngine.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
         System.out.println(chessEngine.detectCheck());
@@ -73,7 +75,7 @@ public class ChessController {
         int currentPlayer = chessEngine.getCurrentPlayer();
         Point currentPoint = chessEngine.getCurrentPiece();
         chessView.addCapturedPiece(currentPlayer, chessEngine.getPieceType(clickedTile.x, clickedTile.y));
-        chessEngine.capturePiece(clickedTile.x, clickedTile.y);
+        chessEngine.capturePiece(currentPoint.x, currentPoint.y,clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
         chessView.updatePlayerScore(currentPlayer, chessEngine.getUserScore(currentPlayer));

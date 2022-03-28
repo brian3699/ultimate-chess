@@ -134,10 +134,6 @@ public class ChessView implements GameViewInterface{
         if(currentPlayer == 1) timer = player1Timer;
         else timer = player2Timer;
         int time = Integer.parseInt(timer.getText()) - 1;
-        if(time == 0){
-            myAnimation = null;
-            showMessage("timeExpire");
-        }
         timer.setText(time+"");
     }
 
