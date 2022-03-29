@@ -24,8 +24,8 @@ class ChessEngineTest {
 
     @Test
     void testPawnMoveBlack() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(5,1);
-        System.out.println(chessEngine.getPieceTeam(5,1));
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(5,1);
+        System.out.println(chessEngine.getPiecePlayerNumber(5,1));
         Assertions.assertEquals("5, 2",moves.get(0).x + ", " + moves.get(0).y );
         Assertions.assertEquals("5, 3",moves.get(1).x + ", " + moves.get(1).y );
 
@@ -33,35 +33,35 @@ class ChessEngineTest {
 
     @Test
     void testPawnMoveWhite() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(5,6);
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(5,6);
         Assertions.assertEquals("5, 5",moves.get(0).x + ", " + moves.get(0).y );
         Assertions.assertEquals("5, 4",moves.get(1).x + ", " + moves.get(1).y );
     }
 
     @Test
     void testKingMoveBlack() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(4,7);
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(4,7);
         for(Point p : moves) System.out.println(p.x + ", " + p.y);
         Assertions.assertEquals(0,moves.size());
     }
 
     @Test
     void testKingMoveWhite() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(4,0);
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(4,0);
         for(Point p : moves) System.out.println(p.x + ", " + p.y);
         Assertions.assertEquals(0,moves.size());
     }
 
     @Test
     void testQueenMoveBlack() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(3,7);
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(3,7);
         for(Point p : moves) System.out.println(p.x + ", " + p.y);
         Assertions.assertEquals(0,moves.size());
     }
 
     @Test
     void testQueenMoveWhite() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = chessEngine.getValidMoves(3,0);
+        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(3,0);
         for(Point p : moves) System.out.println(p.x + ", " + p.y);
         Assertions.assertEquals(0,moves.size());
     }

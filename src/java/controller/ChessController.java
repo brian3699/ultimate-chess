@@ -8,10 +8,10 @@ import model.util.ReflectionHandler;
 import view.ChessView;
 import view.GameViewInterface;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChessController {
@@ -55,7 +55,7 @@ public class ChessController {
     }
 
     private void clickOnPiece(){
-        ArrayList<Point> validMoves = chessEngine.getValidMoves(clickedTile.x, clickedTile.y);
+        List<Point> validMoves = chessEngine.getValidMoves(clickedTile.x, clickedTile.y);
         chessView.highlightPossibleMoves(validMoves);
     }
 
@@ -64,7 +64,7 @@ public class ChessController {
     }
 
     private void movePiece(){
-        Point currentPoint = chessEngine.getCurrentPiece();
+        Point currentPoint = chessEngine.getCurrentPieceLocation();
         chessEngine.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
@@ -73,12 +73,12 @@ public class ChessController {
 
     private void capturePiece(){
         int currentPlayer = chessEngine.getCurrentPlayer();
-        Point currentPoint = chessEngine.getCurrentPiece();
+        Point currentPoint = chessEngine.getCurrentPieceLocation();
         chessView.addCapturedPiece(currentPlayer, chessEngine.getPieceType(clickedTile.x, clickedTile.y));
         chessEngine.capturePiece(currentPoint.x, currentPoint.y,clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
-        chessView.updatePlayerScore(currentPlayer, chessEngine.getUserScore(currentPlayer));
+        chessView.updatePlayerScore(currentPlayer, chessEngine.getPlayerScore(currentPlayer));
         System.out.println(chessEngine.detectCheck());
     }
 
@@ -86,7 +86,7 @@ public class ChessController {
         for(int i = 0; i < 8; i++){
             for(int j = 0; j< 8; j++){
                 String piece = chessEngine.getPieceType(i, j);
-                int team = chessEngine.getPieceTeam(i,j);
+                int team = chessEngine.getPiecePlayerNumber(i,j);
                 chessView.setTile(piece, team, j, i);
             }
         }

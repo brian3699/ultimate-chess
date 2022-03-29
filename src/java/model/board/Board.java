@@ -35,6 +35,8 @@ public class Board <T extends PieceInterface> implements BoardInterface{
      */
     public Board(int width, int height){
         scoreTable = new int[3];
+        this.width = width;
+        this.height = height;
         setPieceList(3);
         setDefaultBoard(width, height);
 
@@ -132,4 +134,9 @@ public class Board <T extends PieceInterface> implements BoardInterface{
             return 0;
         }
     }
+
+    public int getWidth(){return width;};
+
+    public int getHeight(){return height;};
+
 }
