@@ -44,4 +44,6 @@ public interface BoardInterface {
     public int getPlayerNumber(int x, int y);
 
     public int getPiecePoint(int x, int y);
+
+    public void revert(int x1, int y1, int x2, int y2);
 }

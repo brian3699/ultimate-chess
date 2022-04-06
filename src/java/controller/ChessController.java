@@ -1,6 +1,5 @@
 package controller;
 
-import com.opencsv.exceptions.CsvException;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
@@ -8,8 +7,7 @@ import model.util.ReflectionHandler;
 import view.ChessView;
 import view.GameViewInterface;
 
-import java.awt.Point;
-import java.io.IOException;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -24,9 +22,12 @@ public class ChessController {
     private final ReflectionHandler reflectionHandler;
     private Point clickedTile;
 
-
-
-    public ChessController(String gameLanguage, Stage stage) throws IOException, CsvException {
+    /**
+     * Initializes game's model and view classes
+     * @param gameLanguage language
+     * @param stage stage
+     */
+    public ChessController(String gameLanguage, Stage stage){
         myStage = stage;
         languageResource = makeResourceBundle(LANGUAGE_RESOURCE_DIRECTORY + gameLanguage);
         reflectionHandler = new ReflectionHandler();
@@ -34,6 +35,9 @@ public class ChessController {
         this.chessView = new ChessView(languageResource, e -> onTileClick((Point) e), 8, 8);
     }
 
+    /**
+     * Sets the game's frontend and backend classes and starts the game
+     */
     public void startGame(){
         initializeBoard();
         Scene scene = chessView.getGameScene();
@@ -41,8 +45,11 @@ public class ChessController {
         myStage.show();
     }
 
+    /**
+     * Method called by frontend classes when a user clicks on a tile
+     * @param clickedTile location of the tile
+     */
     private void onTileClick(Point clickedTile){
-
         try{
             this.clickedTile = clickedTile;
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
@@ -51,7 +58,6 @@ public class ChessController {
             e.printStackTrace();
             chessView.showMessage("errorClick");
         }
-
     }
 
     private void clickOnPiece(){
@@ -68,7 +74,11 @@ public class ChessController {
         chessEngine.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
-        System.out.println(chessEngine.detectCheck());
+        chessEngine.nextTurn();
+        if(chessEngine.detectCheck()){
+            System.out.println("Checkmate : " + chessEngine.detectCheckMate());
+            chessView.showMessage("Check");
+        }
     }
 
     private void capturePiece(){
@@ -79,7 +89,11 @@ public class ChessController {
         chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
         chessView.updateCurrentPlayer();
         chessView.updatePlayerScore(currentPlayer, chessEngine.getPlayerScore(currentPlayer));
-        System.out.println(chessEngine.detectCheck());
+        chessEngine.nextTurn();
+        if(chessEngine.detectCheck()){
+            System.out.println("Checkmate : " + chessEngine.detectCheckMate());
+            chessView.showMessage("Check");
+        }
     }
 
     private void initializeBoard(){

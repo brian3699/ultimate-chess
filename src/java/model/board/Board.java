@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 public class Board <T extends PieceInterface> implements BoardInterface{
     // Instances of pieces will be stored in this List
     private List<List<T>> myBoard;
+    private T historyOrigin;
+    private T historyNew;
     private List<List<T>> capturedPiece;
     private List<List<T>> playerPieces;
 
@@ -78,11 +80,12 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     // capture a piece
     public void capture(int x1, int y1, int x2, int y2){
-        T movingPiece = myBoard.get(y1).get(x1);
-        T captured = myBoard.get(y2).get(x2);
+        historyOrigin = myBoard.get(y1).get(x1);
+        historyNew = myBoard.get(y2).get(x2);
+
         // update scoreTable and capturedPiece
         //playerPieces.get(captured.getPlayerNumber()).remove(captured);
-        capturedPiece.get(captured.getPlayerNumber()).add(captured);
+        capturedPiece.get(historyNew.getPlayerNumber()).add(historyNew);
 
         // update myBoard
         movePiece(x1, y1, x2, y2);
@@ -90,9 +93,16 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     // move piece to a new cell
     public void movePiece(int x1, int y1, int x2, int y2){
-        T movingPiece = myBoard.get(y1).get(x1);
-        myBoard.get(y2).set(x2, movingPiece);
+        historyOrigin = myBoard.get(y1).get(x1);
+        historyNew = myBoard.get(y2).get(x2);
+
+        myBoard.get(y2).set(x2, historyOrigin);
         myBoard.get(y1).set(x1, null);
+    }
+
+    public void revert(int x1, int y1, int x2, int y2){
+        myBoard.get(y1).set(x1, historyOrigin);
+        myBoard.get(y2).set(x2, historyNew);
     }
 
 

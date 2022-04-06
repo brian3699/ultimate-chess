@@ -169,7 +169,6 @@ public abstract class GameEngine {
      */
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
         myBoard.movePiece(xOrigin, yOrigin, xNew, yNew);
-        nextTurn();
     }
 
     /**
@@ -184,7 +183,6 @@ public abstract class GameEngine {
         int score = myBoard.getPiecePoint(xCaptured, yCaptured);
         scoreBoard.put(currentPlayer, scoreBoard.get(currentPlayer) + score);
         myBoard.capture(xOrigin, yOrigin, xCaptured, yCaptured);
-        nextTurn();
     }
 
     /**
@@ -193,6 +191,10 @@ public abstract class GameEngine {
     public void nextTurn() {
         currentPlayer = currentPlayer % 2 + 1;
         turnCount += 1;
+    }
+
+    public void revert(int x1, int y1, int x2, int y2){
+        myBoard.revert(x1, y1, x2, y2);
     }
 
     /**
