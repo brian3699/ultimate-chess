@@ -1,6 +1,6 @@
 package controller;
 
-import view.ChoiceView;
+import view.components.ChoiceView;
 
 import java.util.ArrayList;
 import java.util.Enumeration;

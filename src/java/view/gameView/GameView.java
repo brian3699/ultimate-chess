@@ -23,22 +23,44 @@ public abstract class GameView {
     public abstract void movePiece(int xOrigin, int yOrigin, int xNew, int yNew);
 
 
-
-
     /**
      * Display message to the user
      * @param messageID ID of the message
      */
     public abstract void showMessage(String messageID);
 
+    /**
+     * getter method for gameScene
+     * @return scene of the game
+     */
     public abstract Scene getGameScene();
 
+    /**
+     * sets the tile
+     * @param pieceType type of the piece
+     * @param team team number
+     * @param rowNum row number
+     * @param colNum column number
+     */
     public abstract void setTile(String pieceType, int team, int rowNum, int colNum);
 
+    /**
+     * changes the current player displayed on the game scene
+     */
     public abstract void updateCurrentPlayer();
 
+    /**
+     * updates player's score displayed on the game scene
+     * @param playerNumber player number
+     * @param score player's current score
+     */
     public abstract void updatePlayerScore(int playerNumber, int score);
 
+    /**
+     * display capture pieces
+     * @param playerNumber player number
+     * @param pieceType type of the captured piece
+     */
     public abstract void addCapturedPiece(int playerNumber, String pieceType);
 
 }

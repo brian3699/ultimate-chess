@@ -9,8 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import view.BoardView;
-import view.TileView;
+import view.components.BoardView;
+import view.components.TileView;
 
 import java.awt.*;
 import java.util.List;
@@ -159,12 +159,11 @@ public class ChessView extends GameView {
         myBoard.setTile(pieceType, team, rowNum, colNum);
     }
 
-    @Override
+
     public void highlightPossibleMoves(List<Point> possibleMoves) {
         myBoard.highlightPossibleMoves(possibleMoves);
     }
 
-    @Override
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
         player1Timer.setText("60");
         player2Timer.setText("60");
@@ -172,7 +171,6 @@ public class ChessView extends GameView {
     }
 
 
-    @Override
     public void showMessage(String messageID) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(languageResource.getString(messageID));
