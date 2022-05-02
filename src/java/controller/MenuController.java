@@ -7,14 +7,22 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainController {
+/**
+ * Controller class responsible for creating the menu scene and communication user's choices to the backend.
+ *
+ * @author Young Jun
+ */
+public class MenuController {
     private static final String LANGUAGE_CHOICE_DIRECTORY = "view.resources.language.LanguageOptions";
     private static final String OPTION_TITLE_ENGLISH = "Please Select a Language ";
     private final String defaultLanguage;
     private List<String> languageList;
     private String gameLanguage;
 
-    public MainController(){
+    /**
+     * Constructor for MenuController
+     */
+    public MenuController() {
         languageList = new ArrayList<>();
         populateLanguageOptions();
         defaultLanguage = languageList.get(0);
@@ -30,6 +38,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Creates a popup in the frontend for the user to choose a language to play the game.
+     *
+     * @return user's language choice
+     */
     public String getUserLanguage() {
         ChoiceView choiceView = new ChoiceView();
         // convert list to array

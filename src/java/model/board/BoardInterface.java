@@ -3,15 +3,28 @@ package model.board;
 import java.util.ResourceBundle;
 
 /**
- * backend class of a chess board
+ * backend interface of a game board
  *
  * @author Young Jun
  */
 public interface BoardInterface {
 
+    /**
+     * captures a piece in the backend
+     * @param x1 x coordinate of the moving piece
+     * @param y1 y coordinate of the moving piece
+     * @param x2 x coordinate of the captured piece
+     * @param y2 y coordinate of the captured piece
+     */
     public void capture(int x1, int y1, int x2, int y2);
 
-    // move piece to a new cell
+    /**
+     * moves a piece in the backend
+     * @param x1 x coordinate of the moving piece
+     * @param y1 y coordinate of the moving piece
+     * @param x2 x coordinate of the destination tile
+     * @param y2 y coordinate of the destination tile
+     */
     public void movePiece(int x1, int y1, int x2, int y2);
 
     /**
@@ -45,5 +58,24 @@ public interface BoardInterface {
 
     public int getPiecePoint(int x, int y);
 
+    /**
+     * revert a move
+     * @param x1 x coordinate of the original location
+     * @param y1 y coordinate of the original location
+     * @param x2 x coordinate of the current location
+     * @param y2 y coordinate of the current location
+     */
     public void revert(int x1, int y1, int x2, int y2);
+
+    /**
+     * getter method of board's width
+     * @return board's width
+     */
+    public int getWidth();
+
+    /**
+     * getter method of board's height
+     * @return board's height
+     */
+    public int getHeight();
 }

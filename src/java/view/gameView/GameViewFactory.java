@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  *
  * @author Young Jun
  */
-public class GetGameView {
+public class GameViewFactory {
 
     /**
      * returns GameView for the requested board game
@@ -21,7 +21,7 @@ public class GetGameView {
      * @param colCount         number of columns
      * @return GameView of the requested board game
      */
-    public GameView getGameView(String game, ResourceBundle languageResource, Consumer<Point> clickMethod, int rowCount, int colCount) {
+    public final GameView getGameView(String game, ResourceBundle languageResource, Consumer<Point> clickMethod, int rowCount, int colCount) {
         switch (game) {
             case "Chess":
                 return new ChessView(languageResource, clickMethod, rowCount, colCount);

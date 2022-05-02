@@ -9,7 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
+/**
+ * Class that implements a BoardInterface. Creates backend model of a board game.
+ * @param <T> PieceInterface
+ *
+ * @author Young Jun
+ */
 public class Board <T extends PieceInterface> implements BoardInterface{
     // Instances of pieces will be stored in this List
     private List<List<T>> myBoard;
@@ -78,7 +83,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         }
     }
 
-    // capture a piece
+    @Override
     public void capture(int x1, int y1, int x2, int y2){
         historyOrigin = myBoard.get(y1).get(x1);
         historyNew = myBoard.get(y2).get(x2);
@@ -91,7 +96,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         movePiece(x1, y1, x2, y2);
     }
 
-    // move piece to a new cell
+    @Override
     public void movePiece(int x1, int y1, int x2, int y2){
         historyOrigin = myBoard.get(y1).get(x1);
         historyNew = myBoard.get(y2).get(x2);
@@ -100,6 +105,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         myBoard.get(y1).set(x1, null);
     }
 
+    @Override
     public void revert(int x1, int y1, int x2, int y2){
         myBoard.get(y1).set(x1, historyOrigin);
         myBoard.get(y2).set(x2, historyNew);
@@ -133,9 +139,6 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         }
     }
 
-
-
-
     @Override
     public int getPlayerNumber(int x, int y){
         try{
@@ -145,8 +148,10 @@ public class Board <T extends PieceInterface> implements BoardInterface{
         }
     }
 
+    @Override
     public int getWidth(){return width;};
 
+    @Override
     public int getHeight(){return height;};
 
 }

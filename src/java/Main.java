@@ -1,5 +1,5 @@
 import controller.ChessController;
-import controller.MainController;
+import controller.MenuController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,7 +13,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MainController mainController = new MainController();
+        MenuController mainController = new MenuController();
         String gameLanguage = mainController.getUserLanguage();
         ChessController chessController = new ChessController(gameLanguage, primaryStage);
         chessController.startGame();
