@@ -1,4 +1,4 @@
-package view;
+package view.gameView;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -9,13 +9,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import view.BoardView;
+import view.TileView;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-public class ChessView implements GameViewInterface{
+public class ChessView extends GameView {
     private static final String MAGIC_VALUE_RESOURCE_PATH = "view.resources.MagicValues";
     private int currentPlayer;
 
@@ -130,6 +132,7 @@ public class ChessView implements GameViewInterface{
     }
 
     private void step(){
+
         Text timer;
         if(currentPlayer == 1) timer = player1Timer;
         else timer = player2Timer;

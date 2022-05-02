@@ -301,12 +301,9 @@ public class ChessEngine extends GameEngine {
         Point king;
         if (getCurrentPlayer() == 1)king = new Point(player1King.x, player1King.y);
         else king = new Point(player2King.x, player2King.y);
-        int opponent = getCurrentPlayer() % 2 + 1;
+
         boolean[][] myMoves = getAllMovableTile(getCurrentPlayer());
         List<Point> kingMoves = getValidMoves(king.x, king.y);
-        for(Point point: checkPieces){
-            System.out.println("checkPieces :" + point.x + point.y);
-        }
 
         for (Point point : kingMoves) myOptions.add(new int[]{king.x, king.y, point.x, point.y});
         for (Point checkPiece : checkPieces) myOptions.addAll(getPointsBetween(myMoves, checkPiece, king));
@@ -340,14 +337,9 @@ public class ChessEngine extends GameEngine {
             if(xIncrement != 0) xIncrement /= Math.abs(xIncrement);
             if(yIncrement != 0) yIncrement /= Math.abs(yIncrement);
 
-            System.out.println("xIncrement :"+ xIncrement);
-            System.out.println("yIncrement :"+ yIncrement);
-
-
             for (int i = 1; i <= Math.max(Math.abs(origin.x - king.x), Math.abs(origin.y - king.y)); i++) {
                 int x = king.x + xIncrement * i;
                 int y = king.y + yIncrement * i;
-
 
                 if (myMoves[y][x]) {
                     targetPieces = new ArrayList<>();
@@ -355,9 +347,6 @@ public class ChessEngine extends GameEngine {
                     getAllMovableTile(getCurrentPlayer());
                     for (Point point : targetPieces) retList.add(new int[]{point.x, point.y, x, y});
                 }
-                System.out.println("target :"+ target.x + target.y + "size :" +  targetPieces.size());
-
-
             }
         }else{
             targetPieces = new ArrayList<>();

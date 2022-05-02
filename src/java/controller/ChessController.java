@@ -4,8 +4,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
 import model.util.ReflectionHandler;
-import view.ChessView;
-import view.GameViewInterface;
+import view.gameView.GameView;
+import view.gameView.GetGameView;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +17,7 @@ public class ChessController {
     private static final String LANGUAGE_RESOURCE_DIRECTORY = "view.resources.language.";
     private final ResourceBundle languageResource;
     private final Stage myStage;
-    private GameViewInterface chessView;
+    private GameView chessView;
     private ChessEngine chessEngine;
     private final ReflectionHandler reflectionHandler;
     private Point clickedTile;
@@ -32,7 +32,8 @@ public class ChessController {
         languageResource = makeResourceBundle(LANGUAGE_RESOURCE_DIRECTORY + gameLanguage);
         reflectionHandler = new ReflectionHandler();
         this.chessEngine = new ChessEngine();
-        this.chessView = new ChessView(languageResource, e -> onTileClick((Point) e), 8, 8);
+        GetGameView getGame = new GetGameView();
+        this.chessView = getGame.getGameView("Chess", languageResource, e -> onTileClick((Point) e), 8, 8);
     }
 
     /**
