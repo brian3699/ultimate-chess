@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+/**
+ * A class that extends GameView. Creates scene for a Chess game.
+ *
+ * @author Young Jun
+ */
 public class ChessView extends GameView {
     private static final String MAGIC_VALUE_RESOURCE_PATH = "view.resources.MagicValues";
     private int currentPlayer;
@@ -38,8 +43,15 @@ public class ChessView extends GameView {
     private VBox root;
 
 
-
-    public ChessView(ResourceBundle languageResource,Consumer<Point> clickMethod, int rowCount, int colCount){
+    /**
+     * Constructor for ChessView.
+     *
+     * @param languageResource ResourceBundle containing language of the game
+     * @param clickMethod      method that will be clicked when a user clicks on a tile
+     * @param rowCount         number of rows
+     * @param colCount         number of columns
+     */
+    public ChessView(ResourceBundle languageResource, Consumer<Point> clickMethod, int rowCount, int colCount) {
         currentPlayer = 0;
         magicValueResource = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
         this.languageResource = languageResource;
@@ -50,7 +62,7 @@ public class ChessView extends GameView {
         updateCurrentPlayer();
     }
 
-    private void initializeVariables(){
+    private void initializeVariables() {
         player1Timer = new Text("60");
         player2Timer = new Text("60");
         player1Score = new Text("0");
@@ -59,7 +71,7 @@ public class ChessView extends GameView {
         player2Captured = new HBox();
     }
 
-    private void initializeGame(){
+    private void initializeGame() {
         player1Header = makeHeader("Player1", player1Timer, player1Score, player1Captured, 1);
         player2Header = makeHeader("Player2", player2Timer, player2Score, player2Captured, 2);
 
@@ -67,7 +79,17 @@ public class ChessView extends GameView {
         startTimer();
     }
 
-    public HBox makeHeader(String userName, Text playerTimer, Text score, HBox playerCaptured, int playerNumber){
+    /**
+     * Creates header
+     *
+     * @param userName       player's name
+     * @param playerTimer    player's remaining time
+     * @param score          player's score
+     * @param playerCaptured player's capture pieces
+     * @param playerNumber   player number
+     * @return header
+     */
+    public HBox makeHeader(String userName, Text playerTimer, Text score, HBox playerCaptured, int playerNumber) {
         Node userIcon = makeUserIcon(userName, playerNumber);
         Node timer = makeTimer(playerTimer);
         Node scoreBoard = makeScoreBoard(score, playerCaptured);
@@ -75,25 +97,25 @@ public class ChessView extends GameView {
         return new HBox(userIcon, timer, scoreBoard);
     }
 
-    public void updateCurrentPlayer(){
+    public void updateCurrentPlayer() {
         currentPlayer = currentPlayer % 2 + 1;
-        if(currentPlayer == 1){
+        if (currentPlayer == 1) {
             player1Header.setStyle(magicValueResource.getString("4"));
             player2Header.setStyle(magicValueResource.getString("3"));
-        }else {
+        } else {
             player2Header.setStyle(magicValueResource.getString("4"));
             player1Header.setStyle(magicValueResource.getString("3"));
         }
     }
 
-    private Node makeTimer(Text playerTimer){
+    private Node makeTimer(Text playerTimer) {
         Text remainingTime = new Text(languageResource.getString("Remaining"));
         Text seconds = new Text(languageResource.getString("Seconds"));
 
         return new HBox(remainingTime, playerTimer, seconds);
     }
 
-    private Node makeScoreBoard(Text score, HBox playerCapturedPieces){
+    private Node makeScoreBoard(Text score, HBox playerCapturedPieces) {
         Text playerScore = new Text(languageResource.getString("Score"));
         Text captured = new Text(languageResource.getString("Captured"));
 
@@ -103,7 +125,7 @@ public class ChessView extends GameView {
         return new VBox(firstRow, secondRow);
     }
 
-    private Node makeUserIcon(String userName, int teamNumber){
+    private Node makeUserIcon(String userName, int teamNumber) {
         VBox userIcon = new VBox();
         Text user = new Text(languageResource.getString(userName));
         TileView king = new TileView("King", teamNumber, 40);
@@ -112,32 +134,32 @@ public class ChessView extends GameView {
     }
 
 
-    public void updatePlayerScore(int playerNumber, int score){
-        if(playerNumber == 1){
-            player1Score.setText(score+"");
-        }else{
-            player2Score.setText(score+"");
+    public void updatePlayerScore(int playerNumber, int score) {
+        if (playerNumber == 1) {
+            player1Score.setText(score + "");
+        } else {
+            player2Score.setText(score + "");
         }
         //initializeGame();
     }
 
-    public void addCapturedPiece(int playerNumber, String pieceType){
+    public void addCapturedPiece(int playerNumber, String pieceType) {
         int opponent = playerNumber % 2 + 1;
         TileView capturedPiece = new TileView(pieceType, opponent, 20);
-        if(playerNumber == 1){
+        if (playerNumber == 1) {
             player1Captured.getChildren().add(capturedPiece);
-        }else{
+        } else {
             player2Captured.getChildren().add(capturedPiece);
         }
     }
 
-    private void step(){
+    private void step() {
 
         Text timer;
-        if(currentPlayer == 1) timer = player1Timer;
+        if (currentPlayer == 1) timer = player1Timer;
         else timer = player2Timer;
         int time = Integer.parseInt(timer.getText()) - 1;
-        timer.setText(time+"");
+        timer.setText(time + "");
     }
 
     private void startTimer() {
@@ -148,14 +170,12 @@ public class ChessView extends GameView {
     }
 
 
-
-
-    public Scene getGameScene(){
+    public Scene getGameScene() {
         myGameScene = new Scene(root);
         return myGameScene;
     }
 
-    public void setTile(String pieceType, int team, int rowNum, int colNum){
+    public void setTile(String pieceType, int team, int rowNum, int colNum) {
         myBoard.setTile(pieceType, team, rowNum, colNum);
     }
 

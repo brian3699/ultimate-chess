@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+/**
+ * class that extends GridPane. Creates the board of the game.
+ *
+ * @author Young Jun
+ */
 public class BoardView extends GridPane {
 
     private static final String MAGIC_VALUE_RESOURCE_PATH = "view.resources.MagicValues";
@@ -18,6 +23,13 @@ public class BoardView extends GridPane {
     private final TileView[][] boardArray;
     private List<Point> possibleMoves;
 
+    /**
+     * Constructor for BoardView
+     *
+     * @param clickMethod method that will be clicked when a user clicks on a tile
+     * @param rowCount    number of rows
+     * @param colCount    number of columns
+     */
     public BoardView(Consumer<Point> clickMethod, int rowCount, int colCount) {
         this.clickMethod = clickMethod;
         this.rowCount = rowCount;
@@ -26,12 +38,28 @@ public class BoardView extends GridPane {
         magicValueBundle = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
     }
 
-    public void setTile(String pieceType, int team, int rowNum, int colNum){
+    /**
+     * Sets the tile at (colNum, rowNum)
+     *
+     * @param pieceType type of the piece
+     * @param team      number of the team
+     * @param rowNum    row number
+     * @param colNum    column number
+     */
+    public void setTile(String pieceType, int team, int rowNum, int colNum) {
         TileView tile = new TileView(pieceType, team);
         addTileToBoard(tile, rowNum, colNum);
     }
 
-    public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew){
+    /**
+     * Move piece at (xOrigin, yOrigin) to (xNew, yNew)
+     *
+     * @param xOrigin column number of the moving tile
+     * @param yOrigin row number of the tile
+     * @param xNew    column number of the destination tile
+     * @param yNew    row number of the destination tile
+     */
+    public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
         removeHighlight();
         TileView currentPiece = boardArray[yOrigin][xOrigin];
         TileView destinationTile = boardArray[yNew][xNew];
@@ -48,7 +76,7 @@ public class BoardView extends GridPane {
      * @param possibleMoves List of points with possible moves.
      */
     public void highlightPossibleMoves(List<Point> possibleMoves) {
-        if(this.possibleMoves != null) removeHighlight();
+        if (this.possibleMoves != null) removeHighlight();
         this.possibleMoves = possibleMoves;
         for (Point move : possibleMoves) {
             TileView tile = boardArray[move.y][move.x];
@@ -58,7 +86,8 @@ public class BoardView extends GridPane {
         }
     }
 
-    private void removeHighlight(){
+    // remove highlight
+    private void removeHighlight() {
         for (Point move : possibleMoves) {
             TileView tile = boardArray[move.y][move.x];
             this.getChildren().remove(tile);
@@ -66,12 +95,14 @@ public class BoardView extends GridPane {
         }
     }
 
-    private void setTileColor(TileView tile, int rowNum, int colNum){
-        int tileColor = ((rowNum % 2) + colNum)%2;
+    // highlights the tile green
+    private void setTileColor(TileView tile, int rowNum, int colNum) {
+        int tileColor = ((rowNum % 2) + colNum) % 2;
         tile.setBackground(tileColor);
     }
 
-    private void addTileToBoard(TileView tile, int rowNum, int colNum){
+    // sets the tile and add to board
+    private void addTileToBoard(TileView tile, int rowNum, int colNum) {
         tile.setOnMouseClicked(event -> clickMethod.accept(new Point(colNum, rowNum)));
         setTileColor(tile, rowNum, colNum);
         boardArray[rowNum][colNum] = tile;

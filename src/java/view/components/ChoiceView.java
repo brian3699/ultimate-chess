@@ -2,13 +2,19 @@ package view.components;
 
 import javafx.scene.control.ChoiceDialog;
 
+/**
+ * A class that creates a popup message that displays options that a user can choose
+ *
+ * @author Young Jun
+ */
 public class ChoiceView {
 
     /**
      * Generates a choice dialog for the user to choose a language
+     *
      * @return language resource bundle's path
      */
-    public String getUserLanguage(String defaultChoice, String[] optionsArray, String title){
+    public String getUserLanguage(String defaultChoice, String[] optionsArray, String title) {
 
         String userLanguage = makeChoiceDialog(defaultChoice, optionsArray, title);
         return userLanguage;
@@ -19,7 +25,7 @@ public class ChoiceView {
      * Creates a choiceDialog and returns
      */
     private String makeChoiceDialog(String defaultOption, String[] optionList,
-                                                 String title) {
+                                    String title) {
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultOption);
         choiceDialog.setContentText(title);
         for (String option : optionList) choiceDialog.getItems().add(option);
