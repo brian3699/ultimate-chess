@@ -12,6 +12,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
+/**
+ * abstract class containing basic methods of a board game engine.
+ *
+ * @author Young Jun
+ */
 public abstract class GameEngine {
     private static final String CLICK_ON_PIECE_METHOD_NAME = "clickOnPiece";
 
@@ -55,7 +60,7 @@ public abstract class GameEngine {
     }
 
     // initialize class Board
-    private void initializeBoard(String boardFilePath, String teamFilePath){
+    private void initializeBoard(String boardFilePath, String teamFilePath) {
         try {
             // create csv file reader
             boardReader = new CSVReader(new FileReader(boardFilePath));
@@ -69,14 +74,14 @@ public abstract class GameEngine {
             boardReader = new CSVReader(new FileReader(boardFilePath));
             // initialize Board
             myBoard = new Board<>(width, height);
-        }catch (IOException | CsvException e){
+        } catch (IOException | CsvException e) {
             myBoard = new Board<>(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
             isCorrectFile = false;
         }
     }
 
     // Set pieces in myBoard
-    private void setPiece(){
+    private void setPiece() {
         try {
             // loop over all rows in the csv file
             for (int i = 0; i < height; i++) {
@@ -90,13 +95,13 @@ public abstract class GameEngine {
                     addPieceToTile(i, j, pieceLine[j], teamLine[j]);
                 }
             }
-        }catch (CsvValidationException | IOException e){
+        } catch (CsvValidationException | IOException e) {
             isCorrectFile = false;
         }
     }
 
     // add a piece to board
-    private void addPieceToTile(int i, int j, String pieceType, String team){
+    private void addPieceToTile(int i, int j, String pieceType, String team) {
         try {
             // path to the ResourceBundle containing Piece information
             String pieceInfoPath = pieceResource.getString(pieceType);
@@ -104,16 +109,17 @@ public abstract class GameEngine {
             // team number of the piece
             int teamNumber = Integer.parseInt(team);
             myBoard.setCell(teamNumber, pieceDataResource, j, i);
-        }catch (MissingResourceException e){
+        } catch (MissingResourceException e) {
             return;
         }
     }
 
     /**
      * return false when file creates an error
+     *
      * @return isCorrectFile
      */
-    public boolean checkWrongFile(){
+    public boolean checkWrongFile() {
         return isCorrectFile;
     }
 
@@ -193,7 +199,7 @@ public abstract class GameEngine {
         turnCount += 1;
     }
 
-    public void revert(int x1, int y1, int x2, int y2){
+    public void revert(int x1, int y1, int x2, int y2) {
         myBoard.revert(x1, y1, x2, y2);
     }
 

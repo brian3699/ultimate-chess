@@ -1,25 +1,19 @@
 package model.piece;
 
-public class Piece implements PieceInterface{
-    private final int pieceScore;
-    private final String pieceType;
-    private final int playerNumber;
-
-
+/**
+ * Data carrier class containing information of a board game piece.
+ *
+ * @author Young Jun
+ */
+public record Piece(String pieceType, int pieceScore, int playerNumber) implements PieceInterface {
     /**
-     * Made for testing
-     * TODO: remove
+     * Constructor for class Piece
+     *
+     * @param pieceType    type of the piece
+     * @param pieceScore   score of the piece
+     * @param playerNumber player number
      */
-    public Piece(){
-        pieceScore = 0;
-        pieceType = null;
-        playerNumber = 0;
-    }
-
-    public Piece(String pieceType, int pieceScore, int playerNumber){
-        this.pieceScore = pieceScore;
-        this.pieceType = pieceType;
-        this.playerNumber = playerNumber;
+    public Piece {
     }
 
 

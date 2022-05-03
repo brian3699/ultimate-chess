@@ -11,6 +11,7 @@ public interface BoardInterface {
 
     /**
      * captures a piece in the backend
+     *
      * @param x1 x coordinate of the moving piece
      * @param y1 y coordinate of the moving piece
      * @param x2 x coordinate of the captured piece
@@ -20,6 +21,7 @@ public interface BoardInterface {
 
     /**
      * moves a piece in the backend
+     *
      * @param x1 x coordinate of the moving piece
      * @param y1 y coordinate of the moving piece
      * @param x2 x coordinate of the destination tile
@@ -60,6 +62,7 @@ public interface BoardInterface {
 
     /**
      * revert a move
+     *
      * @param x1 x coordinate of the original location
      * @param y1 y coordinate of the original location
      * @param x2 x coordinate of the current location
@@ -69,12 +72,14 @@ public interface BoardInterface {
 
     /**
      * getter method of board's width
+     *
      * @return board's width
      */
     public int getWidth();
 
     /**
      * getter method of board's height
+     *
      * @return board's height
      */
     public int getHeight();

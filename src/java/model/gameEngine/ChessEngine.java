@@ -7,6 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Class that extends abstract class GameEngine. GameEngine of a chess game.
+ *
+ * @author Young Jun
+ */
 public class ChessEngine extends GameEngine {
     private static final String DEFAULT_BOARD_DATA_PATH = "resources/board/Default_Chess_Board.csv";
     private static final String DEFAULT_TEAM_DATA_PATH = "resources/board/Default_Chess_Board_Team.csv";
@@ -258,7 +263,7 @@ public class ChessEngine extends GameEngine {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (getPiecePlayerNumber(j, i) == playerNumber ) {
+                if (getPiecePlayerNumber(j, i) == playerNumber) {
                     // add valid moves of a player's piece to allPossibleMoves
                     allPossibleMoves.addAll(getValidMoves(j, i));
                 }
@@ -299,7 +304,7 @@ public class ChessEngine extends GameEngine {
         List<int[]> myOptions = new ArrayList<>();
 
         Point king;
-        if (getCurrentPlayer() == 1)king = new Point(player1King.x, player1King.y);
+        if (getCurrentPlayer() == 1) king = new Point(player1King.x, player1King.y);
         else king = new Point(player2King.x, player2King.y);
 
         boolean[][] myMoves = getAllMovableTile(getCurrentPlayer());
@@ -309,18 +314,18 @@ public class ChessEngine extends GameEngine {
         for (Point checkPiece : checkPieces) myOptions.addAll(getPointsBetween(myMoves, checkPiece, king));
 
 
-        for(int[] move : myOptions){
+        for (int[] move : myOptions) {
             targetPieces = new ArrayList<>();
             movePiece(move[0], move[1], move[2], move[3]);
             ret = detectCheck();
 
 
-            if(getCurrentPlayer() == 1) player1King = king;
+            if (getCurrentPlayer() == 1) player1King = king;
             else player2King = king;
 
             revert(move[0], move[1], move[2], move[3]);
 
-            if(!ret) return false;
+            if (!ret) return false;
         }
 
         return true;
@@ -334,8 +339,8 @@ public class ChessEngine extends GameEngine {
             int xIncrement = (origin.x - king.x);
             int yIncrement = (origin.y - king.y);
 
-            if(xIncrement != 0) xIncrement /= Math.abs(xIncrement);
-            if(yIncrement != 0) yIncrement /= Math.abs(yIncrement);
+            if (xIncrement != 0) xIncrement /= Math.abs(xIncrement);
+            if (yIncrement != 0) yIncrement /= Math.abs(yIncrement);
 
             for (int i = 1; i <= Math.max(Math.abs(origin.x - king.x), Math.abs(origin.y - king.y)); i++) {
                 int x = king.x + xIncrement * i;
@@ -348,7 +353,7 @@ public class ChessEngine extends GameEngine {
                     for (Point point : targetPieces) retList.add(new int[]{point.x, point.y, x, y});
                 }
             }
-        }else{
+        } else {
             targetPieces = new ArrayList<>();
             target = origin;
 

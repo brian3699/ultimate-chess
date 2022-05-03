@@ -11,11 +11,11 @@ import java.util.ResourceBundle;
 
 /**
  * Class that implements a BoardInterface. Creates backend model of a board game.
- * @param <T> PieceInterface
  *
+ * @param <T> PieceInterface
  * @author Young Jun
  */
-public class Board <T extends PieceInterface> implements BoardInterface{
+public class Board<T extends PieceInterface> implements BoardInterface {
     // Instances of pieces will be stored in this List
     private List<List<T>> myBoard;
     private T historyOrigin;
@@ -31,16 +31,17 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     /**
      * default constructor. Creates 8X8 board for 2 players
      */
-    public Board(){
-        this(8,8);
+    public Board() {
+        this(8, 8);
     }
 
     /**
      * Creates a board for 2 players
-     * @param width width of the board
+     *
+     * @param width  width of the board
      * @param height height of the board
      */
-    public Board(int width, int height){
+    public Board(int width, int height) {
         scoreTable = new int[3];
         this.width = width;
         this.height = height;
@@ -51,22 +52,23 @@ public class Board <T extends PieceInterface> implements BoardInterface{
 
     /**
      * Creates a board for n players
+     *
      * @param numPlayers number of players
-     * @param width width of the board
-     * @param height height of the board
+     * @param width      width of the board
+     * @param height     height of the board
      */
-    public Board(int numPlayers, int width, int height){
+    public Board(int numPlayers, int width, int height) {
         scoreTable = new int[numPlayers];
         setPieceList(numPlayers);
         setDefaultBoard(width, height);
     }
 
     // Initialize board
-    private void setDefaultBoard(int width, int height){
+    private void setDefaultBoard(int width, int height) {
         this.width = width;
         this.height = height;
         myBoard = new ArrayList<>();
-        for(int i = 0; i < height; i++){
+        for (int i = 0; i < height; i++) {
             // create a row
             List<T> row = (List<T>) Arrays.asList(new Piece[width]);
             // add to myBoard
@@ -75,16 +77,16 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     // initializes capturedPiece
-    private void setPieceList(int numPlayers){
+    private void setPieceList(int numPlayers) {
         capturedPiece = new ArrayList<>();
-        for(int i = 0; i < numPlayers; i++){
+        for (int i = 0; i < numPlayers; i++) {
             capturedPiece.add(new ArrayList<>());
             capturedPiece.add(new ArrayList<>());
         }
     }
 
     @Override
-    public void capture(int x1, int y1, int x2, int y2){
+    public void capture(int x1, int y1, int x2, int y2) {
         historyOrigin = myBoard.get(y1).get(x1);
         historyNew = myBoard.get(y2).get(x2);
 
@@ -97,7 +99,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     @Override
-    public void movePiece(int x1, int y1, int x2, int y2){
+    public void movePiece(int x1, int y1, int x2, int y2) {
         historyOrigin = myBoard.get(y1).get(x1);
         historyNew = myBoard.get(y2).get(x2);
 
@@ -106,7 +108,7 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     @Override
-    public void revert(int x1, int y1, int x2, int y2){
+    public void revert(int x1, int y1, int x2, int y2) {
         myBoard.get(y1).set(x1, historyOrigin);
         myBoard.get(y2).set(x2, historyNew);
     }
@@ -122,36 +124,44 @@ public class Board <T extends PieceInterface> implements BoardInterface{
     }
 
     @Override
-    public String getPieceType(int x, int y){
-        try{
+    public String getPieceType(int x, int y) {
+        try {
             return myBoard.get(y).get(x).getPieceType();
-        }catch (NullPointerException | IndexOutOfBoundsException e){
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return "-";
         }
     }
 
     @Override
-    public int getPiecePoint(int x, int y){
-        try{
+    public int getPiecePoint(int x, int y) {
+        try {
             return myBoard.get(y).get(x).getPieceScore();
-        }catch (NullPointerException | IndexOutOfBoundsException e){
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return 0;
         }
     }
 
     @Override
-    public int getPlayerNumber(int x, int y){
-        try{
+    public int getPlayerNumber(int x, int y) {
+        try {
             return myBoard.get(y).get(x).getPlayerNumber();
-        }catch (NullPointerException | IndexOutOfBoundsException e){
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return 0;
         }
     }
 
     @Override
-    public int getWidth(){return width;};
+    public int getWidth() {
+        return width;
+    }
+
+    ;
 
     @Override
-    public int getHeight(){return height;};
+    public int getHeight() {
+        return height;
+    }
+
+    ;
 
 }

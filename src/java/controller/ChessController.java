@@ -3,6 +3,7 @@ package controller;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
+import model.gameEngine.GameEngineFactory;
 import model.util.ReflectionHandler;
 import view.gameView.GameView;
 import view.gameView.GameViewFactory;
@@ -37,9 +38,10 @@ public class ChessController {
         myStage = stage;
         languageResource = makeResourceBundle(LANGUAGE_RESOURCE_DIRECTORY + gameLanguage);
         reflectionHandler = new ReflectionHandler();
-        this.chessEngine = new ChessEngine();
-        GameViewFactory getGame = new GameViewFactory();
-        this.chessView = getGame.getGameView("Chess", languageResource, e -> onTileClick((Point) e), 8, 8);
+        GameEngineFactory gameEngineFactory = new GameEngineFactory();
+        chessEngine = (ChessEngine) gameEngineFactory.getGameEngine("Chess");
+        GameViewFactory gameViewFactory = new GameViewFactory();
+        this.chessView = gameViewFactory.getGameView("Chess", languageResource, e -> onTileClick((Point) e), 8, 8);
     }
 
     /**
