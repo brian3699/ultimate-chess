@@ -2,7 +2,6 @@ package model.gameEngine;
 
 import com.opencsv.exceptions.CsvException;
 import model.board.Board;
-import model.piece.Piece;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 class ChessEngineTest {
     ChessEngine chessEngine;
-    Board<Piece> myBoard;
+    Board myBoard;
 
     @BeforeEach
     void setUp() throws CsvException, IOException {

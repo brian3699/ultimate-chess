@@ -1,6 +1,5 @@
 package model.board;
 
-import model.piece.Piece;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,7 @@ import java.util.ResourceBundle;
 
 class BoardTest {
     ResourceBundle testResource = ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
-    Board<Piece> testBoard = new Board<>();
+    Board testBoard = Board.getInstance();
 
     @BeforeEach
     void setUp(){

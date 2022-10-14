@@ -4,9 +4,8 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import model.board.Board;
-import model.piece.Piece;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +24,7 @@ public abstract class GameEngine {
     protected final int width;
     protected final int height;
     protected final ResourceBundle pieceResource;
-    protected Board<Piece> myBoard;
+    protected Board myBoard;
 
 
     private int currentPlayer;
@@ -74,9 +73,9 @@ public abstract class GameEngine {
             // reset boardReader
             boardReader = new CSVReader(new FileReader(boardFilePath));
             // initialize Board
-            myBoard = new Board<>(width, height);
+            myBoard = Board.getInstance();
         } catch (IOException | CsvException e) {
-            myBoard = new Board<>(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+            myBoard = Board.getInstance();
             isCorrectFile = false;
         }
     }
