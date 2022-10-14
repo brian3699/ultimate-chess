@@ -25,12 +25,13 @@ public abstract class GameEngine {
     protected final int width;
     protected final int height;
     protected final ResourceBundle pieceResource;
+    protected Board<Piece> myBoard;
+
 
     private int currentPlayer;
     private int turnCount;
     private boolean isCorrectFile;
 
-    private Board<Piece> myBoard;
     private CSVReader boardReader;
     private CSVReader teamReader;
     private Map<Integer, Integer> scoreBoard;
@@ -101,7 +102,7 @@ public abstract class GameEngine {
     }
 
     // add a piece to board
-    private void addPieceToTile(int i, int j, String pieceType, String team) {
+    protected void addPieceToTile(int i, int j, String pieceType, String team) {
         try {
             // path to the ResourceBundle containing Piece information
             String pieceInfoPath = pieceResource.getString(pieceType);
@@ -110,6 +111,7 @@ public abstract class GameEngine {
             int teamNumber = Integer.parseInt(team);
             myBoard.setCell(teamNumber, pieceDataResource, j, i);
         } catch (MissingResourceException e) {
+            e.printStackTrace();
             return;
         }
     }

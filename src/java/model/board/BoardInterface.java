@@ -83,4 +83,21 @@ public interface BoardInterface {
      * @return board's height
      */
     public int getHeight();
+
+    /**
+     * return array of player's captured pieces
+     * @param playerNumber player number
+     * @return player's captured pieces
+     */
+    public String[] getCapturedPieceList(int playerNumber);
+
+    /**
+     * change pawn to another piece
+     * @param x col number
+     * @param y row number
+     * @param pieceType type of piece
+     */
+    public void pawnPromotion(int x, int y, String pieceType);
+
+
 }

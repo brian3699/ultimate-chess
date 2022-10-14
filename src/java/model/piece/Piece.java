@@ -5,15 +5,17 @@ package model.piece;
  *
  * @author Young Jun
  */
-public record Piece(String pieceType, int pieceScore, int playerNumber) implements PieceInterface {
-    /**
-     * Constructor for class Piece
-     *
-     * @param pieceType    type of the piece
-     * @param pieceScore   score of the piece
-     * @param playerNumber player number
-     */
-    public Piece {
+public class Piece implements PieceInterface {
+
+
+    String pieceType;
+    int pieceScore;
+    int playerNumber;
+
+    public Piece(String pieceType, int pieceScore, int playerNumber){
+        this.pieceType = pieceType;
+        this.pieceScore = pieceScore;
+        this.playerNumber = playerNumber;
     }
 
 
@@ -21,6 +23,12 @@ public record Piece(String pieceType, int pieceScore, int playerNumber) implemen
     public String getPieceType() {
         return pieceType;
     }
+
+    @Override
+    public void setPieceType(String pieceType){
+        this.pieceType = pieceType;
+    }
+
 
     @Override
     public int getPieceScore() {

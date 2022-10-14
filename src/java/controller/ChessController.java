@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import model.gameEngine.ChessEngine;
 import model.gameEngine.GameEngineFactory;
 import model.util.ReflectionHandler;
+import view.components.ChoiceView;
 import view.gameView.GameView;
 import view.gameView.GameViewFactory;
 
@@ -27,6 +28,7 @@ public class ChessController {
     private ChessEngine chessEngine;
     private final ReflectionHandler reflectionHandler;
     private Point clickedTile;
+    private ChoiceView choiceView;
 
     /**
      * Initializes game's model and view classes
@@ -42,6 +44,7 @@ public class ChessController {
         chessEngine = (ChessEngine) gameEngineFactory.getGameEngine("Chess");
         GameViewFactory gameViewFactory = new GameViewFactory();
         this.chessView = gameViewFactory.getGameView("Chess", languageResource, e -> onTileClick((Point) e), 8, 8);
+        choiceView = new ChoiceView();
     }
 
     /**
@@ -63,6 +66,7 @@ public class ChessController {
         try {
             this.clickedTile = clickedTile;
             String clickType = chessEngine.clickType(clickedTile.x, clickedTile.y);
+            System.out.println(clickType);
             reflectionHandler.handleMethod(clickType, CLASS_PATH).invoke(ChessController.this);
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -81,9 +85,12 @@ public class ChessController {
 
     private void movePiece() {
         Point currentPoint = chessEngine.getCurrentPieceLocation();
-        chessEngine.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
-        chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
+        int newX = clickedTile.x;
+        int newY = clickedTile.y;
+        chessEngine.movePiece(currentPoint.x, currentPoint.y, newX, newY);
+        chessView.movePiece(currentPoint.x, currentPoint.y, newX, newY);
         chessView.updateCurrentPlayer();
+        pawnPromotion(newX, newY);
         chessEngine.nextTurn();
         if (chessEngine.detectCheck()) {
             System.out.println("Checkmate : " + chessEngine.detectCheckMate());
@@ -91,18 +98,36 @@ public class ChessController {
         }
     }
 
+
     private void capturePiece() {
         int currentPlayer = chessEngine.getCurrentPlayer();
         Point currentPoint = chessEngine.getCurrentPieceLocation();
-        chessView.addCapturedPiece(currentPlayer, chessEngine.getPieceType(clickedTile.x, clickedTile.y));
-        chessEngine.capturePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
-        chessView.movePiece(currentPoint.x, currentPoint.y, clickedTile.x, clickedTile.y);
+        int newX = clickedTile.x;;
+        int newY = clickedTile.y;
+        chessView.addCapturedPiece(currentPlayer, chessEngine.getPieceType(newX, newY));
+        chessEngine.capturePiece(currentPoint.x, currentPoint.y, newX, newY);
+        chessView.movePiece(currentPoint.x, currentPoint.y, newX, newY);
         chessView.updateCurrentPlayer();
         chessView.updatePlayerScore(currentPlayer, chessEngine.getPlayerScore(currentPlayer));
+        pawnPromotion(newX, newY);
         chessEngine.nextTurn();
         if (chessEngine.detectCheck()) {
             System.out.println("Checkmate : " + chessEngine.detectCheckMate());
             chessView.showMessage("Check");
+        }
+    }
+
+    private void pawnPromotion(int x, int y){
+        if((y == 0 | y == 7) && chessEngine.getPieceType(x, y).equals("Pawn")){
+
+            String[] capturedPieces = chessEngine.getCapturedPiece(chessEngine.getCurrentPlayer());
+            if(capturedPieces.length == 0) return;
+
+            String promotePiece = choiceView.getUserLanguage(capturedPieces[0], capturedPieces, "Choose a piece to promote");
+            chessEngine.pawnPromotion(x,y,promotePiece);
+            chessView.setTile(promotePiece, chessEngine.getCurrentPlayer(), y, x );
+            chessView.removeCapturedPiece(chessEngine.getCurrentPlayer()%2+1, promotePiece);
+
         }
     }
 

@@ -7,6 +7,7 @@ package model.piece;
  */
 public interface PieceInterface {
 
+
     /**
      * return Piece Type
      *
@@ -14,12 +15,20 @@ public interface PieceInterface {
      */
     String getPieceType();
 
+
+
     /**
      * return the number of points this piece is worth
      *
      * @return number of points
      */
     int getPieceScore();
+
+    /**
+     * set piece type
+     * @param pieceType piece type
+     */
+    void setPieceType(String pieceType);
 
 
     /**

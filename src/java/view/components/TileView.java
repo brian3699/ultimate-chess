@@ -18,6 +18,7 @@ public class TileView extends Region {
     private final ResourceBundle magicValueResource;
     private final Image pieceImage;
     private int tileSize;
+    private String pieceType;
 
     /**
      * Constructor for TileView
@@ -28,6 +29,7 @@ public class TileView extends Region {
      */
     public TileView(String pieceType, int team, int tileSize) {
         magicValueResource = ResourceBundle.getBundle(MAGIC_VALUE_RESOURCE_PATH);
+        this.pieceType = pieceType;
         this.tileSize = tileSize;
         // Initialize a resource bundle containing all magic values
         String imagePath = magicValueResource.getString(pieceType + "_Image" + team);
@@ -44,6 +46,16 @@ public class TileView extends Region {
     public TileView(String pieceType, int team) {
         this(pieceType, team, DEFAULT_TILE_SIZE);
     }
+
+    /**
+     * return piece type
+     * @return pieceType
+     */
+    public String getPieceType(){
+        return pieceType;
+    }
+
+
 
     // Initialize a piece node and insert an image.
     private void setTile(Image pieceImage) {

@@ -153,6 +153,19 @@ public class ChessView extends GameView {
         }
     }
 
+    public void removeCapturedPiece(int playerNumber, String pieceType){
+        HBox captured = player2Captured;
+        if(playerNumber == 1) captured = player1Captured;
+
+        for(Node node : captured.getChildren()){
+            TileView piece = (TileView) node;
+            if(piece.getPieceType().equals(pieceType)){
+                captured.getChildren().remove(node);
+                break;
+            }
+        }
+    }
+
     private void step() {
 
         Text timer;

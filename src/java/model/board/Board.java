@@ -79,9 +79,11 @@ public class Board<T extends PieceInterface> implements BoardInterface {
     // initializes capturedPiece
     private void setPieceList(int numPlayers) {
         capturedPiece = new ArrayList<>();
+        playerPieces = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
             capturedPiece.add(new ArrayList<>());
-            capturedPiece.add(new ArrayList<>());
+            playerPieces.add(new ArrayList<>());
+
         }
     }
 
@@ -91,8 +93,18 @@ public class Board<T extends PieceInterface> implements BoardInterface {
         historyNew = myBoard.get(y2).get(x2);
 
         // update scoreTable and capturedPiece
+
         //playerPieces.get(captured.getPlayerNumber()).remove(captured);
-        capturedPiece.get(historyNew.getPlayerNumber()).add(historyNew);
+        capturedPiece.get(historyNew.getPlayerNumber()%2).add(historyNew);
+
+        System.out.println("player 1");
+        for(T piece: capturedPiece.get(0)){
+            System.out.println(piece.getPieceType());
+        }
+        System.out.println("player 2");
+        for(T piece: capturedPiece.get(1)){
+            System.out.println(piece.getPieceType());
+        }
 
         // update myBoard
         movePiece(x1, y1, x2, y2);
@@ -119,9 +131,11 @@ public class Board<T extends PieceInterface> implements BoardInterface {
         // TODO : need to finish this part after completing Piece classes
         T newPiece = (T) new Piece(pieceInfo.getString("name"),
                 Integer.parseInt(pieceInfo.getString("point")), playerNumber);
-        capturedPiece.get(playerNumber).add(newPiece);
+        playerPieces.get(playerNumber).add(newPiece);
         myBoard.get(y).set(x, newPiece);
     }
+
+
 
     @Override
     public String getPieceType(int x, int y) {
@@ -130,6 +144,11 @@ public class Board<T extends PieceInterface> implements BoardInterface {
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             return "-";
         }
+    }
+
+    @Override
+    public void pawnPromotion(int x, int y, String pieceType){
+        myBoard.get(y).get(x).setPieceType(pieceType);
     }
 
     @Override
@@ -160,6 +179,19 @@ public class Board<T extends PieceInterface> implements BoardInterface {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public String[] getCapturedPieceList(int playerNumber){
+        int playerListNumber = playerNumber % 2;
+        int listSize = capturedPiece.get(playerListNumber).size();
+
+        String[] ret = new String[listSize];
+        for(int i = 0; i < listSize; i++){
+            ret[i] = capturedPiece.get(playerListNumber).get(i).getPieceType();
+        }
+
+        return ret;
     }
 
     ;

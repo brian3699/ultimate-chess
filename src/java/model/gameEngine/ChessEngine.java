@@ -1,11 +1,12 @@
 package model.gameEngine;
 
 import model.util.ReflectionHandler;
+import view.components.ChoiceView;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Class that extends abstract class GameEngine. GameEngine of a chess game.
@@ -33,8 +34,9 @@ public class ChessEngine extends GameEngine {
     private List<Point> targetPieces;
     private Set<Point> checkPieces;
     private List<Point> possibleMoves;
-    private boolean[][] player1PossibleMoves;
-    private boolean[][] player2PossibleMoves;
+
+
+    private ChoiceView choiceView;
 
     /**
      * sets the board using default file
@@ -46,6 +48,7 @@ public class ChessEngine extends GameEngine {
         targetPieces = new ArrayList<>();
         checkPieces = new HashSet<>();
         reflectionHandler = new ReflectionHandler();
+        choiceView = new ChoiceView();
     }
 
     /**
@@ -57,6 +60,7 @@ public class ChessEngine extends GameEngine {
     public ChessEngine(String boardFilePath, String teamFilePath, String pieceInfoPath) {
         super(boardFilePath, teamFilePath, pieceInfoPath);
         reflectionHandler = new ReflectionHandler();
+        choiceView = new ChoiceView();
     }
 
     @Override
@@ -96,6 +100,19 @@ public class ChessEngine extends GameEngine {
             else player2King = new Point(xNew, yNew);
         }
         super.movePiece(xOrigin, yOrigin, xNew, yNew);
+        System.out.println(""+xNew+yNew);
+
+
+    }
+
+
+    public void pawnPromotion(int x, int y, String promotePiece) {
+
+        myBoard.pawnPromotion(x,y,promotePiece);
+    }
+
+    public String[] getCapturedPiece(int player){
+        return myBoard.getCapturedPieceList(player);
     }
 
     @Override
@@ -105,6 +122,7 @@ public class ChessEngine extends GameEngine {
             else player2King = new Point(xCaptured, yCaptured);
         }
         super.capturePiece(xOrigin, yOrigin, xCaptured, yCaptured);
+
     }
 
     // return a list of points a pawn can move to
@@ -270,8 +288,6 @@ public class ChessEngine extends GameEngine {
             }
         }
         boolean[][] playerBoard = new boolean[height][width];
-        if (playerNumber == 1) player1PossibleMoves = playerBoard;
-        else if (playerNumber == 2) player2PossibleMoves = playerBoard;
 
         for (Point move : allPossibleMoves) {
             // set to true if a player can move a piece to this tile

@@ -75,4 +75,11 @@ public abstract class GameView {
      */
     public abstract void addCapturedPiece(int playerNumber, String pieceType);
 
+    /**
+     * remove piece in captured pieces
+     * @param playerNumber player number
+     * @param pieceType type of piece
+     */
+    public abstract void removeCapturedPiece(int playerNumber, String pieceType);
+
 }
