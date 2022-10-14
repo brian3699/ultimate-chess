@@ -17,7 +17,7 @@ class ChessEngineTest {
 
     @BeforeEach
     void setUp() throws CsvException, IOException {
-        chessEngine = new ChessEngine();
+        chessEngine = ChessEngine.getInstance();
 
     }
 

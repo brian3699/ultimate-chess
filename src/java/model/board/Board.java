@@ -26,6 +26,7 @@ public class Board implements BoardInterface {
     @Getter private int width;
     @Getter private int height;
 
+
     // Instances of pieces will be stored in this List
     private List<List<Piece>> myBoard;
     private Piece historyOrigin;
@@ -155,8 +156,5 @@ public class Board implements BoardInterface {
             return 0;
         }
     }
-
-
-    ;
 
 }

@@ -10,7 +10,7 @@ public class GameEngineFactory {
     public GameEngine getGameEngine(String game) {
         switch (game) {
             case "Chess":
-                return new ChessEngine();
+                return ChessEngine.getInstance();
         }
         return null;
     }

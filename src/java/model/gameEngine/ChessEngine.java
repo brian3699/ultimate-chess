@@ -1,7 +1,6 @@
 package model.gameEngine;
 
 import model.util.ReflectionHandler;
-import view.components.ChoiceView;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -28,27 +27,31 @@ public class ChessEngine extends GameEngine {
     private final ReflectionHandler reflectionHandler;
 
     private Point currentPieceLocation;
-    private Point player1King;
-    private Point player2King;
+
     private Point target;
     private List<Point> targetPieces;
     private Set<Point> checkPieces;
     private List<Point> possibleMoves;
+    private Point player1King;
+    private Point player2King;
+
+    private static ChessEngine instance = new ChessEngine();
 
 
-    private ChoiceView choiceView;
+    public static ChessEngine getInstance(){
+        return instance;
+    }
 
     /**
      * sets the board using default file
      */
-    public ChessEngine() {
+    private ChessEngine() {
         super(DEFAULT_BOARD_DATA_PATH, DEFAULT_TEAM_DATA_PATH, DEFAULT_CHESS_PIECE_DATA);
         player1King = new Point(4, 7);
         player2King = new Point(4, 0);
         targetPieces = new ArrayList<>();
         checkPieces = new HashSet<>();
         reflectionHandler = new ReflectionHandler();
-        choiceView = new ChoiceView();
     }
 
     /**
@@ -57,10 +60,9 @@ public class ChessEngine extends GameEngine {
      * @param boardFilePath file path to a csv file containing the state of each cell
      * @param teamFilePath  file path to a csv file containing the team number of each cell
      */
-    public ChessEngine(String boardFilePath, String teamFilePath, String pieceInfoPath) {
+    private ChessEngine(String boardFilePath, String teamFilePath, String pieceInfoPath) {
         super(boardFilePath, teamFilePath, pieceInfoPath);
         reflectionHandler = new ReflectionHandler();
-        choiceView = new ChoiceView();
     }
 
     @Override
@@ -88,7 +90,6 @@ public class ChessEngine extends GameEngine {
             // invokes different method for each chess piece type
             return (ArrayList<Point>) reflectionHandler.handleMethod(methodName, CLASS_PATH).invoke(ChessEngine.this);
         } catch (InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
             return new ArrayList<>();
         }
     }
@@ -96,13 +97,10 @@ public class ChessEngine extends GameEngine {
     @Override
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
         if (getPieceType(xOrigin, yOrigin).equals("King")) {
-            if (getPiecePlayerNumber(xOrigin, yOrigin) == 1) player1King = new Point(xNew, yNew);
-            else player2King = new Point(xNew, yNew);
+            setPlayerKing(getPiecePlayerNumber(xOrigin, yOrigin), new Point(xNew, yNew) );
         }
         super.movePiece(xOrigin, yOrigin, xNew, yNew);
         System.out.println(""+xNew+yNew);
-
-
     }
 
 
@@ -118,8 +116,7 @@ public class ChessEngine extends GameEngine {
     @Override
     public void capturePiece(int xOrigin, int yOrigin, int xCaptured, int yCaptured) {
         if (getPieceType(xOrigin, yOrigin).equals("King")) {
-            if (getPiecePlayerNumber(xOrigin, yOrigin) == 1) player1King = new Point(xCaptured, yCaptured);
-            else player2King = new Point(xCaptured, yCaptured);
+            setPlayerKing(getPiecePlayerNumber(xOrigin, yOrigin), new Point(xCaptured, yCaptured) );
         }
         super.capturePiece(xOrigin, yOrigin, xCaptured, yCaptured);
 
@@ -389,6 +386,14 @@ public class ChessEngine extends GameEngine {
      */
     public Point getCurrentPieceLocation() {
         return currentPieceLocation;
+    }
+
+    private void setPlayerKing(int player, Point point){
+        if (player == 1){
+            player1King = point;
+        } else {
+            player2King = point;
+        }
     }
 
 }
