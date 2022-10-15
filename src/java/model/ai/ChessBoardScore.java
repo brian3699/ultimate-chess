@@ -3,15 +3,30 @@ package model.ai;
 
 import model.board.Board;
 
+/**
+ * This class evaluates the current score of the player
+ * In singleton pattern
+ */
 public class ChessBoardScore {
     private static final ChessBoardScore instance = new ChessBoardScore();
 
+
+    /**
+     * Getter of class instance
+     * @return ChessBoardScore instance
+     */
     public static ChessBoardScore getInstance(){
         return instance;
     }
 
     private ChessBoardScore(){}
 
+    /**
+     * Returns player's current score
+     * @param board model of chess board
+     * @param player player number
+     * @return player's current score
+     */
     public int playerCurrentScore(Board board, int player){
         int playerScore = 0;
         int opponent = (player + 1) % 2;
@@ -33,5 +48,7 @@ public class ChessBoardScore {
 
         return playerScore;
     }
+
+
 
 }
