@@ -1,7 +1,7 @@
 package model.gameEngine;
 
 import lombok.Getter;
-import model.piece.pieceEngine.PieceEngineFactory;
+import model.gameEngine.pieceEngine.PieceEngineFactory;
 import model.util.ReflectionHandler;
 
 import java.awt.*;
@@ -56,16 +56,6 @@ public class ChessEngine extends GameEngine {
         reflectionHandler = new ReflectionHandler();
     }
 
-    /**
-     * sets the board with user input
-     *
-     * @param boardFilePath file path to a csv file containing the state of each cell
-     * @param teamFilePath  file path to a csv file containing the team number of each cell
-     */
-    private ChessEngine(String boardFilePath, String teamFilePath, String pieceInfoPath) {
-        super(boardFilePath, teamFilePath, pieceInfoPath);
-        reflectionHandler = new ReflectionHandler();
-    }
 
     @Override
     public String clickType(int x, int y) {
@@ -101,8 +91,9 @@ public class ChessEngine extends GameEngine {
 
 
     public void pawnPromotion(int x, int y, String promotePiece) {
+        ResourceBundle pieceDataResource = ResourceBundle.getBundle(pieceResource.getString(promotePiece));
 
-        myBoard.pawnPromotion(x,y,promotePiece);
+        myBoard.pawnPromotion(x,y,promotePiece, pieceDataResource);
     }
 
     public String[] getCapturedPiece(int player){

@@ -1,4 +1,4 @@
-package model.piece.pieceEngine;
+package model.gameEngine.pieceEngine;
 
 
 import java.awt.*;
@@ -12,28 +12,26 @@ import java.util.Set;
  *
  * @author Young Jun
  */
-public class KnightEngine extends PieceEngine {
-    private static final ResourceBundle MOVES = ResourceBundle.getBundle("model/pieceInfo/Knight");
-    private static KnightEngine instance = new KnightEngine();
+public class QueenEngine extends PieceEngine {
+    private static final ResourceBundle MOVES = ResourceBundle.getBundle("model/pieceInfo/Queen");
+    private static QueenEngine instance = new QueenEngine();
 
     /**
      * Getter of instance
      *
-     * @return KnightEngine
+     * @return QueenEngine
      */
-    public static KnightEngine getInstance() {
+    public static QueenEngine getInstance() {
         return instance;
     }
 
-    private KnightEngine() {
+    private QueenEngine() {
     }
 
     @Override
-    // return a list of points a knight can move to
+    // return a list of points a queen can move to
     public List<Point> getMoves(int x, int y, int currentPlayer, List<Point> targetPieces, Set<Point> checkPieces) {
         updateLists(targetPieces, checkPieces);
-        return getSimpleMoves(x, y, currentPlayer, MOVES);
+        return getComplexMoves(x, y, currentPlayer, MOVES);
     }
-
-
 }

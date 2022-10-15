@@ -97,7 +97,7 @@ public interface BoardInterface {
      * @param y row number
      * @param pieceType type of piece
      */
-    public void pawnPromotion(int x, int y, String pieceType);
+    public void pawnPromotion(int x, int y, String pieceType, ResourceBundle pieceInfo);
 
 
 

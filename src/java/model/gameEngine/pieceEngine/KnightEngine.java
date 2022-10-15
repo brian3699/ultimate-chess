@@ -1,4 +1,5 @@
-package model.piece.pieceEngine;
+package model.gameEngine.pieceEngine;
+
 
 import java.awt.*;
 import java.util.List;
@@ -11,27 +12,28 @@ import java.util.Set;
  *
  * @author Young Jun
  */
-public class BishopEngine extends PieceEngine {
-    private static final ResourceBundle MOVES = ResourceBundle.getBundle("model/pieceInfo/Bishop");
-    private static BishopEngine instance = new BishopEngine();
+public class KnightEngine extends PieceEngine {
+    private static final ResourceBundle MOVES = ResourceBundle.getBundle("model/pieceInfo/Knight");
+    private static KnightEngine instance = new KnightEngine();
 
     /**
      * Getter of instance
      *
-     * @return BishopEngine
+     * @return KnightEngine
      */
-    public static BishopEngine getInstance() {
+    public static KnightEngine getInstance() {
         return instance;
     }
 
-    private BishopEngine() {
+    private KnightEngine() {
     }
 
     @Override
-    // return a list of points a bishop can move to
+    // return a list of points a knight can move to
     public List<Point> getMoves(int x, int y, int currentPlayer, List<Point> targetPieces, Set<Point> checkPieces) {
         updateLists(targetPieces, checkPieces);
-
-        return getComplexMoves(x, y, currentPlayer, MOVES);
+        return getSimpleMoves(x, y, currentPlayer, MOVES);
     }
+
+
 }

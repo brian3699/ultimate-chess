@@ -121,8 +121,9 @@ public class Board implements BoardInterface {
     }
 
     @Override
-    public void pawnPromotion(int x, int y, String pieceType){
+    public void pawnPromotion(int x, int y, String pieceType, ResourceBundle pieceInfo){
         myBoard.get(y).get(x).setPieceType(pieceType);
+        myBoard.get(y).get(x).setPieceScore(Integer.parseInt(pieceInfo.getString(POINT)));
     }
 
     @Override

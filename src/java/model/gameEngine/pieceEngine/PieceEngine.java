@@ -1,4 +1,4 @@
-package model.piece.pieceEngine;
+package model.gameEngine.pieceEngine;
 
 import model.board.Board;
 import model.gameEngine.ChessEngine;

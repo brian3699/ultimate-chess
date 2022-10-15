@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
- * Getter class of a Factory. Returns GameView of the board game.
+ * Factory of GameView variants. Returns GameView of the board game.
  *
  * @author Young Jun
  */

@@ -1,4 +1,4 @@
-package model.piece.pieceEngine;
+package model.gameEngine.pieceEngine;
 
 /**
  * Factory class for classes that extends abstract class PieceEngine

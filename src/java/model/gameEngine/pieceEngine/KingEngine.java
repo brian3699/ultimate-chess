@@ -1,4 +1,4 @@
-package model.piece.pieceEngine;
+package model.gameEngine.pieceEngine;
 
 import java.awt.*;
 import java.util.List;

@@ -38,5 +38,12 @@ public interface PieceInterface {
      */
     int getPlayerNumber();
 
+    /**
+     * set pieceScore
+     * @param pieceScore score of a piece
+     */
+    void setPieceScore(int pieceScore);
+
+
 
 }

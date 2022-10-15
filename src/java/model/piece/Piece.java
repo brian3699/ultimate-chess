@@ -29,6 +29,11 @@ public class Piece implements PieceInterface {
         this.pieceType = pieceType;
     }
 
+    @Override
+    public void setPieceScore(int pieceScore){
+        this.pieceScore = pieceScore;
+    }
+
 
     @Override
     public int getPieceScore() {
