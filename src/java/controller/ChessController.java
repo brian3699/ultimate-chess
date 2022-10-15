@@ -2,6 +2,8 @@ package controller;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.ai.MinimaxPlayer;
+import model.board.Board;
 import model.gameEngine.ChessEngine;
 import model.gameEngine.GameEngineFactory;
 import model.util.ReflectionHandler;
@@ -29,6 +31,10 @@ public class ChessController {
     private final ReflectionHandler reflectionHandler;
     private Point clickedTile;
     private ChoiceView choiceView;
+    private static final MinimaxPlayer minimaxPlayer = MinimaxPlayer.getInstance();
+    private static final Board board = Board.getInstance();
+    private static final boolean AI_MODE = true;
+
 
     /**
      * Initializes game's model and view classes
@@ -84,6 +90,7 @@ public class ChessController {
     }
 
     private void movePiece() {
+        int currentPlayer = chessEngine.getCurrentPlayer();
         Point currentPoint = chessEngine.getCurrentPieceLocation();
         int newX = clickedTile.x;
         int newY = clickedTile.y;
@@ -95,6 +102,11 @@ public class ChessController {
         if (chessEngine.detectCheck()) {
             System.out.println("Checkmate : " + chessEngine.detectCheckMate());
             chessView.showMessage("Check");
+        }
+        if(AI_MODE == true && currentPlayer == 1){
+            List<Point> move = minimaxPlayer.getBestMove(board, 2);
+            onTileClick(move.get(0));
+            onTileClick(move.get(1));
         }
     }
 
@@ -114,6 +126,11 @@ public class ChessController {
         if (chessEngine.detectCheck()) {
             System.out.println("Checkmate : " + chessEngine.detectCheckMate());
             chessView.showMessage("Check");
+        }
+        if(AI_MODE == true && currentPlayer == 1){
+            List<Point> move = minimaxPlayer.getBestMove(board, 2);
+            onTileClick(move.get(0));
+            onTileClick(move.get(1));
         }
     }
 

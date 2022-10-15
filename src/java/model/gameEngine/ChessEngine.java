@@ -80,12 +80,12 @@ public class ChessEngine extends GameEngine {
         return getMoves(x,y);
     }
 
-    public Map<Point, List<Point>> getPlayerAllPossibleMoves(int playerNumber){
+    public Map<Point, List<Point>> getPlayerAllPossibleMoves(){
         Map<Point, List<Point>> moves = new HashMap<>();
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (getPiecePlayerNumber(i, j) == playerNumber) {
+                if (getPiecePlayerNumber(i, j) == getCurrentPlayer()) {
                     Point piece = new Point(i,j);
                     // add valid moves of a player's piece to moves
                     moves.put(piece, getValidMoves(i,j));
