@@ -1,9 +1,10 @@
 package model.gameEngine;
 
+import lombok.Getter;
+import model.piece.pieceEngine.PieceEngineFactory;
 import model.util.ReflectionHandler;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 
@@ -28,14 +29,15 @@ public class ChessEngine extends GameEngine {
 
     private Point currentPieceLocation;
 
-    private Point target;
     private List<Point> targetPieces;
     private Set<Point> checkPieces;
     private List<Point> possibleMoves;
-    private Point player1King;
-    private Point player2King;
+    @Getter private Point target;
+    @Getter private Point player1King;
+    @Getter private Point player2King;
 
-    private static ChessEngine instance = new ChessEngine();
+    private static final ChessEngine instance = new ChessEngine();
+    private static final PieceEngineFactory pieceEngineFactory = PieceEngineFactory.getInstance();
 
 
     public static ChessEngine getInstance(){
@@ -80,18 +82,12 @@ public class ChessEngine extends GameEngine {
         return ERROR_CLICK_METHOD_NAME;
     }
 
+
     @Override
     public List<Point> getValidMoves(int x, int y) {
-        try {
-            possibleMoves = new ArrayList<>();
-            currentPieceLocation = new Point(x, y);
-            // method name to invoke
-            String methodName = GET + getPieceType(x, y) + MOVES;
-            // invokes different method for each chess piece type
-            return (ArrayList<Point>) reflectionHandler.handleMethod(methodName, CLASS_PATH).invoke(ChessEngine.this);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            return new ArrayList<>();
-        }
+        possibleMoves = new ArrayList<>();
+        currentPieceLocation = new Point(x, y);
+        return getMoves(x,y);
     }
 
     @Override
@@ -122,133 +118,19 @@ public class ChessEngine extends GameEngine {
 
     }
 
-    // return a list of points a pawn can move to
-    private List<Point> getPawnMoves() {
-        int x = currentPieceLocation.x;
-        int y = currentPieceLocation.y;
-        int player = getPiecePlayerNumber(x, y);
 
-        List<Point> validMoves = new ArrayList<>();
-        List<Point> possibleMoves = getSimpleMoves(x, y);
+    private List<Point> getMoves(int x, int y) {
+        String pieceType = getPieceType(x,y);
 
-        // pawns can move two tiles from the initial tile
-        if (player == 1 && y == height - 2 && getPiecePlayerNumber(x, y - 1) == 0)
-            possibleMoves.add(new Point(x, y - 2));
-        if (player == 2 && y == 1 && getPiecePlayerNumber(x, y + 1) == 0) possibleMoves.add(new Point(x, y + 2));
+        possibleMoves =  pieceEngineFactory.getPieceEngine(pieceType).getMoves(x,y,getCurrentPlayer(), targetPieces, checkPieces);
 
-        for (Point move : possibleMoves) {
-            int xMove = move.x - x;
-            int yMove = move.y - y;
-            // if the tile is empty
-            if (getPiecePlayerNumber(move.x, move.y) == 0) {
-                // pawn can only move diagonally when capturing an opponent's piece
-                if ((xMove == 1 && yMove == -1) | (xMove == -1 && yMove == -1) | (xMove == 1 && yMove == 1) |
-                        (xMove == -1 && yMove == 1)) continue;
-            } else {
-                // pawn can't capture the opponent's piece with a vertical move
-                if ((xMove == 0 && yMove == 1) | (xMove == 0 && yMove == 2) | (xMove == 0 && yMove == -1) |
-                        (xMove == 0 && yMove == -2)) continue;
-            }
-            // add move to returnList if this move doesn't belong to one of the above restrictions
-            validMoves.add(move);
-        }
-        this.possibleMoves = validMoves;
-        return this.possibleMoves;
-    }
-
-    // return a list of points a knight can move to
-    private List<Point> getKnightMoves() {
-        return getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
-    }
-
-    // return a list of points a bishop can move to
-    private List<Point> getBishopMoves() {
-        return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
-    }
-
-    // return a list of points a rook can move to
-    private List<Point> getRookMoves() {
-        return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
-    }
-
-    // return a list of points a king can move to
-    private List<Point> getKingMoves() {
-        // only when the current player clicks on a king
-        if (getCurrentPlayer() == getPiecePlayerNumber(currentPieceLocation.x, currentPieceLocation.y)) {
-            getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
-            // remove points that will put King in a check
+        if(pieceType.equals("King") && getCurrentPlayer() == getPiecePlayerNumber(x, y)) {
             possibleMoves = removeCheckMoves(possibleMoves, getCurrentPlayer());
-            return possibleMoves;
-        } else {
-            return getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
         }
-    }
 
-    // return a list of points a queen can move to
-    private List<Point> getQueenMoves() {
-        return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
-    }
-
-    // calculate and return possible moves of King, Knight, and Pawn
-    private List<Point> getSimpleMoves(int x, int y) {
-        // Resource bundle containing all possible moves of a piece
-        ResourceBundle pieceMoves = ResourceBundle.getBundle(pieceResource.getString(getPieceType(x, y)));
-
-        // enumerate all possible moves of a piece
-        for (String key : pieceMoves.keySet()) {
-            String teamNumber = "" + key.charAt(0);
-            if (!teamNumber.equals("" + getPiecePlayerNumber(x, y))) continue;
-            // add only valid moves to possibleMoves
-            addValidMoves(x, y, pieceMoves, key, 1);
-        }
         return possibleMoves;
+
     }
-
-    // calculate and return possible moves of Queen, Bishop, and Rook
-    private List<Point> getComplexMoves(int x, int y) {
-        // Resource bundle containing all possible moves of a piece
-        ResourceBundle pieceMoves = ResourceBundle.getBundle(pieceResource.getString(getPieceType(x, y)));
-
-        // enumerate all possible moves of a piece
-        for (String key : pieceMoves.keySet()) {
-            String teamNumber = "" + key.charAt(0);
-            if (!teamNumber.equals("" + getPiecePlayerNumber(x, y))) continue;
-            // Queen, Bishop, and Rook can move multiple tiles in one move
-            for (int i = 1; i < Math.max(width + 1, height + 1); i++) {
-                if (!addValidMoves(x, y, pieceMoves, key, i)) break;
-            }
-        }
-        return possibleMoves;
-    }
-
-    // add only valid moves to possibleMoves
-    private boolean addValidMoves(int x, int y, ResourceBundle pieceMoves, String key, int multiplier) {
-        String[] move = pieceMoves.getString(key).split(",");
-        int newX = Integer.parseInt(move[0]) * multiplier + currentPieceLocation.x;
-        int newY = Integer.parseInt(move[1]) * multiplier + currentPieceLocation.y;
-
-        int player = getPiecePlayerNumber(x, y);
-        int opponent = player % 2 + 1;
-        int destinationTilePlayer = getPiecePlayerNumber(newX, newY);
-
-        // a piece can't move to a tile occupied by the current player's piece
-        boolean isMyPiece = destinationTilePlayer == player;
-        // a piece can't move beyond Board
-        boolean isMoveInBoard = newX >= 0 && newX < width && newY >= 0 && newY < height;
-
-        // add to possibleMoves if a move satisfies both conditions
-        if (!isMyPiece && isMoveInBoard) {
-            possibleMoves.add(new Point(newX, newY));
-            if ((newX == player1King.x && newY == player1King.y) || (newX == player2King.x && newY == player2King.y)) {
-                checkPieces.add(new Point(x, y));
-            } else if (target != null && target.x == newX && target.y == newY) {
-                targetPieces.add(new Point(x, y));
-            }
-        }
-
-        return !(isMyPiece || opponent == destinationTilePlayer);
-    }
-
 
     // remove Points from the possibleMoves that will place King in check
     private List<Point> removeCheckMoves(List<Point> moves, int playerNumber) {
@@ -397,3 +279,144 @@ public class ChessEngine extends GameEngine {
     }
 
 }
+
+
+
+
+
+
+
+/**
+
+ // method name to invoke
+ //String methodName = GET + getPieceType(x, y) + MOVES;
+ // invokes different method for each chess piece type
+ //return (ArrayList<Point>) reflectionHandler.handleMethod(methodName, CLASS_PATH).invoke(ChessEngine.this);
+
+ // return a list of points a pawn can move to
+ private List<Point> getPawnMoves() {
+ int x = currentPieceLocation.x;
+ int y = currentPieceLocation.y;
+ int player = getPiecePlayerNumber(x, y);
+
+ List<Point> validMoves = new ArrayList<>();
+ List<Point> potentialMoves = getSimpleMoves(x, y);
+
+ // pawns can move two tiles from the initial tile
+ if (player == 1 && y == height - 2 && getPiecePlayerNumber(x, y - 1) == 0)
+ potentialMoves.add(new Point(x, y - 2));
+ if (player == 2 && y == 1 && getPiecePlayerNumber(x, y + 1) == 0) potentialMoves.add(new Point(x, y + 2));
+
+ for (Point move : potentialMoves) {
+ int xMove = move.x - x;
+ int yMove = move.y - y;
+ // if the tile is empty
+ if (getPiecePlayerNumber(move.x, move.y) == 0) {
+ // pawn can only move diagonally when capturing an opponent's piece
+ if ((xMove == 1 && yMove == -1) | (xMove == -1 && yMove == -1) | (xMove == 1 && yMove == 1) |
+ (xMove == -1 && yMove == 1)) continue;
+ } else {
+ // pawn can't capture the opponent's piece with a vertical move
+ if ((xMove == 0 && yMove == 1) | (xMove == 0 && yMove == 2) | (xMove == 0 && yMove == -1) |
+ (xMove == 0 && yMove == -2)) continue;
+ }
+ // add move to returnList if this move doesn't belong to one of the above restrictions
+ validMoves.add(move);
+ }
+ this.possibleMoves = validMoves;
+ return this.possibleMoves;
+ }
+
+ // return a list of points a knight can move to
+ private List<Point> getKnightMoves() {
+ return getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
+ }
+
+ // return a list of points a bishop can move to
+ private List<Point> getBishopMoves() {
+ return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
+ }
+
+ // return a list of points a rook can move to
+ private List<Point> getRookMoves() {
+ return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
+ }
+
+ // return a list of points a king can move to
+ private List<Point> getKingMoves() {
+ // only when the current player clicks on a king
+ if (getCurrentPlayer() == getPiecePlayerNumber(currentPieceLocation.x, currentPieceLocation.y)) {
+ getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
+ // remove points that will put King in a check
+ possibleMoves = removeCheckMoves(possibleMoves, getCurrentPlayer());
+ return possibleMoves;
+ } else {
+ return getSimpleMoves(currentPieceLocation.x, currentPieceLocation.y);
+ }
+ }
+
+ // return a list of points a queen can move to
+ private List<Point> getQueenMoves() {
+ return getComplexMoves(currentPieceLocation.x, currentPieceLocation.y);
+ }
+
+ // calculate and return possible moves of King, Knight, and Pawn
+ private List<Point> getSimpleMoves(int x, int y) {
+ // Resource bundle containing all possible moves of a piece
+ ResourceBundle pieceMoves = ResourceBundle.getBundle(pieceResource.getString(getPieceType(x, y)));
+
+ // enumerate all possible moves of a piece
+ for (String key : pieceMoves.keySet()) {
+ String teamNumber = "" + key.charAt(0);
+ if (!teamNumber.equals("" + getPiecePlayerNumber(x, y))) continue;
+ // add only valid moves to possibleMoves
+ addValidMoves(x, y, pieceMoves, key, 1);
+ }
+ return possibleMoves;
+ }
+
+ // calculate and return possible moves of Queen, Bishop, and Rook
+ private List<Point> getComplexMoves(int x, int y) {
+ // Resource bundle containing all possible moves of a piece
+ ResourceBundle pieceMoves = ResourceBundle.getBundle(pieceResource.getString(getPieceType(x, y)));
+
+ // enumerate all possible moves of a piece
+ for (String key : pieceMoves.keySet()) {
+ String teamNumber = "" + key.charAt(0);
+ if (!teamNumber.equals("" + getPiecePlayerNumber(x, y))) continue;
+ // Queen, Bishop, and Rook can move multiple tiles in one move
+ for (int i = 1; i < Math.max(width + 1, height + 1); i++) {
+ if (!addValidMoves(x, y, pieceMoves, key, i)) break;
+ }
+ }
+ return possibleMoves;
+ }
+
+ // add only valid moves to possibleMoves
+ private boolean addValidMoves(int x, int y, ResourceBundle pieceMoves, String key, int multiplier) {
+ String[] move = pieceMoves.getString(key).split(",");
+ int newX = Integer.parseInt(move[0]) * multiplier + currentPieceLocation.x;
+ int newY = Integer.parseInt(move[1]) * multiplier + currentPieceLocation.y;
+
+ int player = getPiecePlayerNumber(x, y);
+ int opponent = player % 2 + 1;
+ int destinationTilePlayer = getPiecePlayerNumber(newX, newY);
+
+ // a piece can't move to a tile occupied by the current player's piece
+ boolean isMyPiece = destinationTilePlayer == player;
+ // a piece can't move beyond Board
+ boolean isMoveInBoard = newX >= 0 && newX < width && newY >= 0 && newY < height;
+
+ // add to possibleMoves if a move satisfies both conditions
+ if (!isMyPiece && isMoveInBoard) {
+ possibleMoves.add(new Point(newX, newY));
+ if ((newX == player1King.x && newY == player1King.y) || (newX == player2King.x && newY == player2King.y)) {
+ checkPieces.add(new Point(x, y));
+ } else if (target != null && target.x == newX && target.y == newY) {
+ targetPieces.add(new Point(x, y));
+ }
+ }
+
+ return !(isMyPiece || opponent == destinationTilePlayer);
+ }
+ **/
