@@ -26,6 +26,7 @@ public class PieceEngineFactory {
             case "Pawn" -> PawnEngine.getInstance();
             case "Queen" -> QueenEngine.getInstance();
             case "Rook" -> RookEngine.getInstance();
+            case "Cannon" -> CannonEngine.getInstance();
             default -> null;
         };
     }

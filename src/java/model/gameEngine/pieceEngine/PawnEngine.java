@@ -36,7 +36,7 @@ public class PawnEngine extends PieceEngine {
 
         int player = myBoard.getPlayerNumber(x, y);
 
-        java.util.List<Point> validMoves = new ArrayList<>();
+        List<Point> validMoves = new ArrayList<>();
         List<Point> potentialMoves = getSimpleMoves(x, y, currentPlayer, MOVES);
 
         // pawns can move two tiles from the initial tile
