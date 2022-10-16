@@ -21,10 +21,11 @@ public class GameViewFactory {
      * @param colCount         number of columns
      * @return GameView of the requested board game
      */
-    public final GameView getGameView(String game, ResourceBundle languageResource, Consumer<Point> clickMethod, int rowCount, int colCount) {
+    public final GameView getGameView(String game, ResourceBundle languageResource, Consumer<Point> clickMethod,
+                                      int rowCount, int colCount, boolean isXiangqi) {
         switch (game) {
             case "Chess":
-                return new ChessView(languageResource, clickMethod, rowCount, colCount);
+                return new ChessView(languageResource, clickMethod, rowCount, colCount, isXiangqi);
         }
         return null;
     }

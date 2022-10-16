@@ -29,7 +29,6 @@ public abstract class GameView {
      */
     public abstract void movePiece(int xOrigin, int yOrigin, int xNew, int yNew);
 
-
     /**
      * Display message to the user
      *
@@ -81,5 +80,8 @@ public abstract class GameView {
      * @param pieceType type of piece
      */
     public abstract void removeCapturedPiece(int playerNumber, String pieceType);
+
+    //public abstract boolean timerStep();
+
 
 }

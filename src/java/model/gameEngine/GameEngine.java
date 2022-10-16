@@ -1,7 +1,6 @@
 package model.gameEngine;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import model.board.Board;
 
@@ -21,8 +20,8 @@ public abstract class GameEngine {
 
     private static final int DEFAULT_BOARD_SIZE = 8;
 
-    protected final int width;
-    protected final int height;
+    protected int width;
+    protected int height;
     protected final ResourceBundle pieceResource;
     protected Board myBoard;
 
@@ -37,47 +36,45 @@ public abstract class GameEngine {
 
 
     /**
-     * sets the board with user input
+     * constructor of game engine
      *
-     * @param boardFilePath file path to a csv file containing the state of each cell
-     * @param teamFilePath  file path to a csv file containing the team number of each cell
      * @param pieceFilePath file path to a csv file containing the path to ResourceBundle containing piece information
      */
-    public GameEngine(String boardFilePath, String teamFilePath, String pieceFilePath) {
+    public GameEngine(String pieceFilePath) {
         // create ResourceBundle from pieceFilePath
         pieceResource = ResourceBundle.getBundle(pieceFilePath);
         initializeScoreBoard();
         currentPlayer = 1;
+    }
 
-        // initialize board using input file
-        initializeBoard(boardFilePath, teamFilePath);
+    /**
+     * initialize the board with user input
+     *
+     * @param boardFilePath file path to a csv file containing the state of each cell
+     * @param teamFilePath  file path to a csv file containing the team number of each cell
+     */
+    public void initializeBoard(String boardFilePath, String teamFilePath) {
+        // Board is in singleton pattern. Reset the board before using
+        try {
+            // create csv file reader
+            boardReader = new CSVReader(new FileReader(boardFilePath));
+            teamReader = new CSVReader(new FileReader(teamFilePath));
+
+            // reset boardReader
+            boardReader = new CSVReader(new FileReader(boardFilePath));
+            // initialize Board
+            myBoard = Board.getInstance();
+        } catch (IOException e) {
+            myBoard = Board.getInstance();
+            isCorrectFile = false;
+        }
+        myBoard.reset();
 
         width = myBoard.getWidth();
         height = myBoard.getHeight();
 
         // add piece to myBoard
         setPiece();
-    }
-
-    // initialize class Board
-    private void initializeBoard(String boardFilePath, String teamFilePath) {
-        try {
-            // create csv file reader
-            boardReader = new CSVReader(new FileReader(boardFilePath));
-            teamReader = new CSVReader(new FileReader(teamFilePath));
-
-            // get width and height
-            int width = boardReader.peek().length;
-            int height = (int) boardReader.readAll().size();
-
-            // reset boardReader
-            boardReader = new CSVReader(new FileReader(boardFilePath));
-            // initialize Board
-            myBoard = Board.getInstance();
-        } catch (IOException | CsvException e) {
-            myBoard = Board.getInstance();
-            isCorrectFile = false;
-        }
     }
 
     // Set pieces in myBoard
@@ -110,7 +107,6 @@ public abstract class GameEngine {
             int teamNumber = Integer.parseInt(team);
             myBoard.setCell(teamNumber, pieceDataResource, j, i);
         } catch (MissingResourceException e) {
-            e.printStackTrace();
             return;
         }
     }
@@ -176,6 +172,17 @@ public abstract class GameEngine {
      */
     public void movePiece(int xOrigin, int yOrigin, int xNew, int yNew) {
         myBoard.movePiece(xOrigin, yOrigin, xNew, yNew);
+    }
+
+    /**
+     * Check if the King is captured
+     * @param x column number
+     * @param y row number
+     * @return boolean of whether the game is over
+     */
+    public boolean detectGameOver(int x, int y){
+        if(myBoard.getPieceType(x, y).equals("King")) return true;
+        return false;
     }
 
     /**

@@ -49,6 +49,12 @@ public class Board implements BoardInterface {
 
     }
 
+    @Override
+    public void reset(){
+        setPieceList(3);
+        setDefaultBoard(width, height);
+    }
+
     // Initialize board
     private void setDefaultBoard(int width, int height) {
         this.width = width;

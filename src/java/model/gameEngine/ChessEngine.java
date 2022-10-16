@@ -14,16 +14,10 @@ import java.util.*;
  * @author Young Jun
  */
 public class ChessEngine extends GameEngine {
-    private static final String DEFAULT_BOARD_DATA_PATH = "resources/board/Default_Chess_Board.csv";
-    private static final String DEFAULT_TEAM_DATA_PATH = "resources/board/Default_Chess_Board_Team.csv";
     private static final String DEFAULT_CHESS_PIECE_DATA = "model/pieceInfo/ChessPiecePaths";
-    private static final String CLASS_PATH = "model.gameEngine.ChessEngine";
-
     private static final String ERROR_CLICK_METHOD_NAME = "errorClick";
     private static final String MOVE_PIECE_METHOD_NAME = "movePiece";
     private static final String CAPTURE_PIECE_METHOD_NAME = "capturePiece";
-    private static final String GET = "get";
-    private static final String MOVES = "Moves";
 
     private final ReflectionHandler reflectionHandler;
 
@@ -48,7 +42,7 @@ public class ChessEngine extends GameEngine {
      * sets the board using default file
      */
     private ChessEngine() {
-        super(DEFAULT_BOARD_DATA_PATH, DEFAULT_TEAM_DATA_PATH, DEFAULT_CHESS_PIECE_DATA);
+        super(DEFAULT_CHESS_PIECE_DATA);
         player1King = new Point(4, 7);
         player2King = new Point(4, 0);
         targetPieces = new ArrayList<>();
@@ -101,7 +95,6 @@ public class ChessEngine extends GameEngine {
             setPlayerKing(getPiecePlayerNumber(xOrigin, yOrigin), new Point(xNew, yNew) );
         }
         super.movePiece(xOrigin, yOrigin, xNew, yNew);
-        System.out.println(""+xNew+yNew);
     }
 
 
@@ -262,7 +255,6 @@ public class ChessEngine extends GameEngine {
 
             for (Point point : targetPieces) retList.add(new int[]{point.x, point.y, origin.x, origin.y});
         }
-        System.out.println("retList :" + retList.size());
 
         return retList;
     }

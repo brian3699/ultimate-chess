@@ -1,0 +1,10 @@
+Rook,Knight,Bishop,Queen,King,Bishop,Knight,Rook
+Pawn,Pawn,Pawn,Pawn,Pawn,Pawn,Pawn,Pawn
+-,-,-,-,-,-,-,-
+-,-,-,-,-,-,-,-
+-,-,-,-,-,-,-,-
+Pawn,-,Pawn,Pawn,Pawn,Pawn,-,Pawn
+-,-,Cannon,-,-,Cannon,-,-
+Rook,Knight,Bishop,-,King,Bishop,Knight,Rook
+
+

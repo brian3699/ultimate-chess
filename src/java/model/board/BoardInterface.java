@@ -99,7 +99,11 @@ public interface BoardInterface {
      */
     public void pawnPromotion(int x, int y, String pieceType, ResourceBundle pieceInfo);
 
+    /**
+     * resets the board
+     */
+    public void reset();
 
 
 
-    }
+}

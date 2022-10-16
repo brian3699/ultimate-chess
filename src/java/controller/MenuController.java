@@ -1,11 +1,13 @@
 package controller;
 
-import view.components.ChoiceView;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import view.gameView.MenuView;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 /**
  * Controller class responsible for creating the menu scene and communication user's choices to the backend.
@@ -13,43 +15,59 @@ import java.util.ResourceBundle;
  * @author Young Jun
  */
 public class MenuController {
-    private static final String LANGUAGE_CHOICE_DIRECTORY = "view.resources.language.LanguageOptions";
-    private static final String OPTION_TITLE_ENGLISH = "Please Select a Language ";
-    private final String defaultLanguage;
-    private List<String> languageList;
-    private String gameLanguage;
+    private static final String DEFAULT_CHESS_BOARD_DATA_PATH = "resources/board/Default_Chess_Board.csv";
+    private static final String DEFAULT_CHESS_TEAM_DATA_PATH = "resources/board/Default_Chess_Board_Team.csv";
+    private static final String DEFAULT_CHESS_XIANGQI_BOARD_DATA_PATH = "resources/board/Default_Chess_Xiangqi_Board.csv";
+    private static final String DEFAULT_CHESS_XIANGQI_TEAM_DATA_PATH = "resources/board/Default_Chess_Xiangqi_Board_Team.csv";
+    private static final String DEFAULT_LANGUAGE = "English";
+    private static final String DEFAULT_LANGUAGE_RESOURCE_DIRECTORY = "view.resources.language.English";
+    private static final String CHESS = "Chess1";
+    private static final String CHESS_VS_CHINESE_CHESS = "Chess2";
+    private static final String PAGE_TITLE_ID = "title";
+    private final ResourceBundle languageResource;
+
+
+    private MenuView menuView;
+    private Map<String, EventHandler> buttonMap;
+    private Stage stage;
 
     /**
      * Constructor for MenuController
      */
-    public MenuController() {
-        languageList = new ArrayList<>();
-        populateLanguageOptions();
-        defaultLanguage = languageList.get(0);
-    }
-
-
-    // read from LANGUAGE_CHOICE_DIRECTORY and add elements to arraylist languageList
-    private void populateLanguageOptions() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(LANGUAGE_CHOICE_DIRECTORY);
-        Enumeration<String> enumeration = resourceBundle.getKeys();
-        while (enumeration.hasMoreElements()) {
-            languageList.add(enumeration.nextElement());
-        }
+    public MenuController(Stage stage) {
+        languageResource = ResourceBundle.getBundle(DEFAULT_LANGUAGE_RESOURCE_DIRECTORY);
+        this.stage = stage;
+        buttonMap = new TreeMap<>();
+        populateButtonMap();
+        menuView = new MenuView(languageResource);
     }
 
     /**
-     * Creates a popup in the frontend for the user to choose a language to play the game.
-     *
-     * @return user's language choice
+     * creates the menuScene and show the stage
      */
-    public String getUserLanguage() {
-        ChoiceView choiceView = new ChoiceView();
-        // convert list to array
-        String[] languageOptions = new String[languageList.size()];
-        languageList.toArray(languageOptions);
-        // create choice view and get user's language choice
-        gameLanguage = choiceView.getUserLanguage(defaultLanguage, languageOptions, OPTION_TITLE_ENGLISH);
-        return gameLanguage;
+    public void startMenu(){
+        Scene scene = menuView.generateMenuScene(PAGE_TITLE_ID, buttonMap );
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // starts chess game
+    private void startChess(){
+        ChessController chessController = new ChessController(DEFAULT_LANGUAGE, stage,
+                DEFAULT_CHESS_BOARD_DATA_PATH, DEFAULT_CHESS_TEAM_DATA_PATH, false);
+        chessController.startGame();
+    }
+
+    // starts chess vs. chinese chess game
+    private void startChessVsXiangqi(){
+        ChessVsXiangqiController chessVsXiangqiController = new ChessVsXiangqiController(DEFAULT_LANGUAGE,
+                stage, DEFAULT_CHESS_XIANGQI_BOARD_DATA_PATH, DEFAULT_CHESS_XIANGQI_TEAM_DATA_PATH);
+        chessVsXiangqiController.startGame();
+    }
+
+    // add button name and event to the buttonMap
+    private void populateButtonMap(){
+        buttonMap.put(CHESS, event -> startChess());
+        buttonMap.put(CHESS_VS_CHINESE_CHESS, event -> startChessVsXiangqi());
     }
 }
