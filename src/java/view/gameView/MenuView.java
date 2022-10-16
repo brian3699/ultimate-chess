@@ -45,12 +45,16 @@ public class MenuView {
      */
     public Scene generateMenuScene(String pageTitle, Map<String, EventHandler> buttonMap) {
         VBox root = new VBox();
+        // Get title of the page
         HBox title = new HBox(new Text(languageResource.getString(pageTitle)));
+        // Images that will be added to the menu
         String[] imageArray = new String[]{CHESS_IMAGE, XIANGQI_IMAGE};
+        // Create HBox containing buttons using buttonGenerator
         HBox buttonBox = buttonGenerator.createMultipleButtons(buttonMap, imageArray);
         title.setId(TITLE_ID);
         root.getChildren().addAll(title, buttonBox);
         gameMenuScene = new Scene(root);
+        // Apply CSS
         gameMenuScene.getStylesheets()
                 .add(Objects.requireNonNull(getClass().getResource(DEFAULT_STYLESHEET)).toExternalForm());
         return gameMenuScene;

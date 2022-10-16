@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Young Jun
  */
-public abstract class GameView {
+public interface GameView {
 
     /**
      * Highlight possible moves on the game board
@@ -76,12 +76,9 @@ public abstract class GameView {
 
     /**
      * remove piece in captured pieces
+     *
      * @param playerNumber player number
-     * @param pieceType type of piece
+     * @param pieceType    type of piece
      */
     public abstract void removeCapturedPiece(int playerNumber, String pieceType);
-
-    //public abstract boolean timerStep();
-
-
 }

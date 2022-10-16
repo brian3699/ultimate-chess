@@ -168,7 +168,7 @@ public class ChessController {
             // if there aren't any capture pieces, return
             if(capturedPieces.length == 0) return;
             // create a choice view where user chooses the piece to promote a pawn
-            String promotePiece = choiceView.getUserLanguage(capturedPieces[0], capturedPieces, "Choose a piece to promote");
+            String promotePiece = choiceView.makeChoiceDialog(capturedPieces[0], capturedPieces, "Choose a piece to promote");
             // update the model
             chessEngine.pawnPromotion(x,y,promotePiece);
             // update the frontend

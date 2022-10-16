@@ -7,29 +7,20 @@ import javafx.scene.control.ChoiceDialog;
  *
  * @author Young Jun
  */
-public class ChoiceView {
+public class ChoiceView implements ChoiceViewInterface{
 
-    /**
-     * Generates a choice dialog for the user to choose a language
-     *
-     * @return language resource bundle's path
-     */
-    public String getUserLanguage(String defaultChoice, String[] optionsArray, String title) {
-
-        String userLanguage = makeChoiceDialog(defaultChoice, optionsArray, title);
-        return userLanguage;
-    }
-
-
-    /**
-     * Creates a choiceDialog and returns
-     */
-    private String makeChoiceDialog(String defaultOption, String[] optionList,
-                                    String title) {
-        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultOption);
+    @Override
+    //Generates a choice dialog for the user to choose from the list of options
+    public String makeChoiceDialog(String defaultChoice, String[] optionsArray, String title) {
+        // create a new choice dialog and set the default option
+        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(defaultChoice);
+        // set the title of the dialog
         choiceDialog.setContentText(title);
-        for (String option : optionList) choiceDialog.getItems().add(option);
+        // add all options to the choice dialog
+        for (String option : optionsArray) choiceDialog.getItems().add(option);
+        // show and wait until the user makes a choice
         choiceDialog.showAndWait();
+        // return user's choice
         return choiceDialog.getSelectedItem();
     }
 }

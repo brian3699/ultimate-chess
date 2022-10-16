@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
 
 import java.util.ResourceBundle;
 
@@ -14,10 +15,12 @@ import java.util.ResourceBundle;
  */
 public class TileView extends Region {
     private static final String MAGIC_VALUE_RESOURCE_PATH = "view.resources.MagicValues";
+    private static final String IMAGE_PATH = "_Image";
     private static final int DEFAULT_TILE_SIZE = 100;
     private final ResourceBundle magicValueResource;
     private final Image pieceImage;
     private int tileSize;
+    @Getter
     private String pieceType;
 
     /**
@@ -32,7 +35,7 @@ public class TileView extends Region {
         this.pieceType = pieceType;
         this.tileSize = tileSize;
         // Initialize a resource bundle containing all magic values
-        String imagePath = magicValueResource.getString(pieceType + "_Image" + team);
+        String imagePath = magicValueResource.getString(pieceType + IMAGE_PATH + team);
         pieceImage = new Image(imagePath);
         setTile(pieceImage);
     }
@@ -46,15 +49,6 @@ public class TileView extends Region {
     public TileView(String pieceType, int team) {
         this(pieceType, team, DEFAULT_TILE_SIZE);
     }
-
-    /**
-     * return piece type
-     * @return pieceType
-     */
-    public String getPieceType(){
-        return pieceType;
-    }
-
 
 
     // Initialize a piece node and insert an image.
