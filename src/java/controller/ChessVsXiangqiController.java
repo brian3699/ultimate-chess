@@ -2,8 +2,11 @@ package controller;
 
 import javafx.stage.Stage;
 
+/**
+ * Controller class of Chess vs Xiangqi game
+ * extends ChessController
+ */
 public class ChessVsXiangqiController extends ChessController{
-
 
     /**
      * Initializes game's model and view classes

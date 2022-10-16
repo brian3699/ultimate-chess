@@ -15,7 +15,6 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
 
 /**
  * Controller class responsible for communicating user's interaction from the frontend to the backend.
@@ -26,9 +25,14 @@ public class ChessController {
 
     private static final String CLASS_PATH = "controller.ChessController";
     private static final String LANGUAGE_RESOURCE_DIRECTORY = "view.resources.language.";
+    private static final String PROMOTION_TITLE = "promotionTitle";
+    private static final String GAME_OVER_ID = "GameOver";
+    private static final String ERROR_CLICK_ID = "errorClick";
+    private static final String CHESS = "Chess";
+    private static final String PAWN = "Pawn";
+    private static final String CHECK = "Check";
     private final ResourceBundle languageResource;
     private final Stage myStage;
-    private Timer timer;
     protected GameView chessView;
     protected ChessEngine chessEngine;
     private final ReflectionHandler reflectionHandler;
@@ -41,11 +45,11 @@ public class ChessController {
     /**
      * Initializes game's model and view classes
      *
-     * @param gameLanguage language
-     * @param stage        stage
+     * @param gameLanguage  language
+     * @param stage         stage
      * @param boardFilePath path of board file
-     * @param teamFilePath path of team file
-     * @param isXiangqi whether this game is Chess vs. Xiangqi
+     * @param teamFilePath  path of team file
+     * @param isXiangqi     whether this game is Chess vs. Xiangqi
      */
     public ChessController(String gameLanguage, Stage stage, String boardFilePath, String teamFilePath, boolean isXiangqi) {
         myStage = stage;
@@ -53,12 +57,12 @@ public class ChessController {
         reflectionHandler = new ReflectionHandler();
         GameEngineFactory gameEngineFactory = new GameEngineFactory();
         // Get ChessEngine
-        chessEngine = (ChessEngine) gameEngineFactory.getGameEngine("Chess");
+        chessEngine = (ChessEngine) gameEngineFactory.getGameEngine(CHESS);
         // Initialize the backend board
         chessEngine.initializeBoard(boardFilePath, teamFilePath);
         GameViewFactory gameViewFactory = new GameViewFactory();
         // Get ChessView from factory
-        chessView = gameViewFactory.getGameView("Chess", languageResource, e -> onTileClick((Point) e),
+        chessView = gameViewFactory.getGameView(CHESS, languageResource, e -> onTileClick((Point) e),
                 8, 8, isXiangqi);
         choiceView = new ChoiceView();
     }
@@ -89,91 +93,107 @@ public class ChessController {
             reflectionHandler.handleMethod(clickType, CLASS_PATH).invoke(ChessController.this);
         } catch (InvocationTargetException | IllegalAccessException e) {
             // Show message if it is not a valid click
-            chessView.showMessage("errorClick");
+            chessView.showMessage(ERROR_CLICK_ID);
         }
     }
 
-    private void endGame(){
-        chessView.showMessage("GameOver");
+    // end game and return to menu
+    private void endGame() {
+        chessView.showMessage(GAME_OVER_ID);
         MenuController menuController = new MenuController(myStage);
         menuController.startMenu();
     }
 
+    // highlight all valid moves when a user click on apiece
     private void clickOnPiece() {
         List<Point> validMoves = chessEngine.getValidMoves(clickedTile.x, clickedTile.y);
         chessView.highlightPossibleMoves(validMoves);
     }
 
+    // show message when user click's on a wrong piece
     private void errorClick() {
-        chessView.showMessage("errorClick");
+        chessView.showMessage(ERROR_CLICK_ID);
     }
 
+    // move piece
     private void movePiece() {
         int currentPlayer = chessEngine.getCurrentPlayer();
         Point currentPoint = chessEngine.getCurrentPieceLocation();
         int newX = clickedTile.x;
         int newY = clickedTile.y;
+        // move piece in the backend
         chessEngine.movePiece(currentPoint.x, currentPoint.y, newX, newY);
+        // move piece in the frontend
         chessView.movePiece(currentPoint.x, currentPoint.y, newX, newY);
         chessView.updateCurrentPlayer();
+        // check pawn promotion
         pawnPromotion(newX, newY);
+        // set model to next turn
         chessEngine.nextTurn();
+        // detect check and alert the user
         if (chessEngine.detectCheck()) {
-            chessView.showMessage("Check");
+            chessView.showMessage(CHECK);
         }
-        if(AI_MODE == true && currentPlayer == 1){
-            List<Point> move = minimaxPlayer.getBestMove(board, 2);
-            onTileClick(move.get(0));
-            onTileClick(move.get(1));
-        }
+        // let the AI player choose a move
+        playAI(currentPlayer);
     }
 
 
     private void capturePiece() {
         int currentPlayer = chessEngine.getCurrentPlayer();
         Point currentPoint = chessEngine.getCurrentPieceLocation();
-        boolean gameOver = false;
-        int newX = clickedTile.x;;
+        int newX = clickedTile.x;
+        ;
         int newY = clickedTile.y;
-        if(chessEngine.detectGameOver(newX, newY)){
+        // detect if the king has been captured
+        boolean gameOver = false;
+        if (chessEngine.detectGameOver(newX, newY)) {
             gameOver = true;
         }
+        // update the view and the model
         chessView.addCapturedPiece(currentPlayer, chessEngine.getPieceType(newX, newY));
         chessEngine.capturePiece(currentPoint.x, currentPoint.y, newX, newY);
         chessView.movePiece(currentPoint.x, currentPoint.y, newX, newY);
         chessView.updateCurrentPlayer();
         chessView.updatePlayerScore(currentPlayer, chessEngine.getPlayerScore(currentPlayer));
+        // check for pawn promotion
         pawnPromotion(newX, newY);
         chessEngine.nextTurn();
-        if(gameOver){
+        // End game if king has been captured.
+        if (gameOver) {
             endGame();
-            return;
         }
         if (chessEngine.detectCheck()) {
-            System.out.println("Checkmate : " + chessEngine.detectCheckMate());
-            chessView.showMessage("Check");
+            chessView.showMessage(CHECK);
         }
-        if(AI_MODE == true && currentPlayer == 1){
+        // let the AI player choose a move
+        playAI(currentPlayer);
+    }
+
+    // call minimaxPlayer to calculate the best move
+    private void playAI(int currentPlayer) {
+        if (AI_MODE == true && currentPlayer == 1) {
             List<Point> move = minimaxPlayer.getBestMove(board, 2);
             onTileClick(move.get(0));
             onTileClick(move.get(1));
         }
     }
 
+
     // Method for handling pawn promotion
-    private void pawnPromotion(int x, int y){
-        if((y == 0 | y == 7) && chessEngine.getPieceType(x, y).equals("Pawn")){
+    private void pawnPromotion(int x, int y) {
+        if ((y == 0 | y == 7) && chessEngine.getPieceType(x, y).equals(PAWN)) {
             // return all captured pieces
             String[] capturedPieces = chessEngine.getCapturedPiece(chessEngine.getCurrentPlayer());
             // if there aren't any capture pieces, return
-            if(capturedPieces.length == 0) return;
+            if (capturedPieces.length == 0) return;
             // create a choice view where user chooses the piece to promote a pawn
-            String promotePiece = choiceView.makeChoiceDialog(capturedPieces[0], capturedPieces, "Choose a piece to promote");
+            String promotePiece = choiceView.makeChoiceDialog(capturedPieces[0], capturedPieces, PROMOTION_TITLE);
             // update the model
-            chessEngine.pawnPromotion(x,y,promotePiece);
+            chessEngine.pawnPromotion(x, y, promotePiece);
             // update the frontend
-            chessView.setTile(promotePiece, chessEngine.getCurrentPlayer(), y, x );
-            chessView.removeCapturedPiece(chessEngine.getCurrentPlayer()%2+1, promotePiece);
+            chessView.setTile(promotePiece, chessEngine.getCurrentPlayer(), y, x);
+            chessView.removeCapturedPiece(chessEngine.getCurrentPlayer() % 2 + 1, promotePiece);
 
         }
     }
@@ -193,7 +213,6 @@ public class ChessController {
         }
     }
 
-
     // make ResourceBundle and return
     private ResourceBundle makeResourceBundle(String path) {
         try {
@@ -202,22 +221,5 @@ public class ChessController {
             return null;
         }
     }
-
-    /**
-     // Update timer every second and ends game if the time expires
-     private void runTimer() {
-         timer = new Timer();
-         // Schedule a timer
-             timer.schedule(new TimerTask() {
-            @Override
-            // method to run every second
-            public void run() {
-            if(chessView.timerStep()) {
-                endGame();
-            }
-        }}, 0, 1000);
-     }
-     **/
-
 
 }
