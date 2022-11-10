@@ -194,7 +194,6 @@ public class ChessController {
             // update the frontend
             chessView.setTile(promotePiece, chessEngine.getCurrentPlayer(), y, x);
             chessView.removeCapturedPiece(chessEngine.getCurrentPlayer() % 2 + 1, promotePiece);
-
         }
     }
 

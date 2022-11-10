@@ -36,15 +36,7 @@ public class MinimaxPlayer {
         bestMove.add(new Point(-1, -1));
     }
 
-    /**
-     * Uses default depth to calculate the best move
-     *
-     * @param board backend Board of the chess game
-     * @return best move
-     */
-    public List<Point> getBestMove(Board board) {
-        return getBestMove(board, DEFAULT_DEPTH);
-    }
+
 
     /**
      * Calculate the best move of a player

@@ -14,19 +14,13 @@ import java.util.ArrayList;
 class ChessEngineTest {
     ChessEngine chessEngine;
     Board myBoard;
+    private static final String DEFAULT_CHESS_BOARD_DATA_PATH = "resources/board/Default_Chess_Board.csv";
+    private static final String DEFAULT_CHESS_TEAM_DATA_PATH = "resources/board/Default_Chess_Board_Team.csv";
 
     @BeforeEach
     void setUp() throws CsvException, IOException {
         chessEngine = ChessEngine.getInstance();
-
-    }
-
-    @Test
-    void testPawnMoveBlack() throws InvocationTargetException, IllegalAccessException {
-        ArrayList<Point> moves = (ArrayList<Point>) chessEngine.getValidMoves(5,1);
-        System.out.println(chessEngine.getPiecePlayerNumber(5,1));
-        Assertions.assertEquals("5, 2",moves.get(0).x + ", " + moves.get(0).y );
-        Assertions.assertEquals("5, 3",moves.get(1).x + ", " + moves.get(1).y );
+        chessEngine.initializeBoard(DEFAULT_CHESS_BOARD_DATA_PATH, DEFAULT_CHESS_TEAM_DATA_PATH);
 
     }
 

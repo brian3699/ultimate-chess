@@ -7,13 +7,18 @@ import org.junit.jupiter.api.Test;
 import java.util.ResourceBundle;
 
 class BoardTest {
+    private static final String DEFAULT_CHESS_PIECE_DATA = "model/pieceInfo/ChessPiecePaths";
     ResourceBundle testResource = ResourceBundle.getBundle("model/pieceInfo/ChessPiecePaths");
+    ResourceBundle pieceResource = ResourceBundle.getBundle(DEFAULT_CHESS_PIECE_DATA);
+
     Board testBoard = Board.getInstance();
 
     @BeforeEach
     void setUp(){
-        testResource.getString("Pawn");
+        testBoard.reset();
     }
+
+
 
     @Test
     void testSetCell(){
@@ -54,6 +59,19 @@ class BoardTest {
         testBoard.capture(4,4,3,3);
         Assertions.assertEquals("King", testBoard.getPieceType(3,3));
         Assertions.assertEquals(2, testBoard.getPlayerNumber(3,3));
+    }
+
+    @Test
+    void revert(){
+        String originalPiece = testBoard.getPieceType(1,1);
+        testBoard.movePiece(1,1,4,4);
+        testBoard.revert(1,1,4,4);
+        Assertions.assertEquals(originalPiece, testBoard.getPieceType(1,1));
+    }
+
+    @Test
+    void getCapturedPieceList(){
+
     }
 
 
