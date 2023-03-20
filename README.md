@@ -1,6 +1,6 @@
 # Chess Variants and AI Player
 
-### A variant of chess game 'Chess vs Chinese Chess' and AI player
+### A variant of chess 'Chess vs Chinese Chess' and AI player
 
 ![](resources/images/chess-play.gif)
 
