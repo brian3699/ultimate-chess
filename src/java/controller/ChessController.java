@@ -93,6 +93,7 @@ public class ChessController {
             reflectionHandler.handleMethod(clickType, CLASS_PATH).invoke(ChessController.this);
         } catch (InvocationTargetException | IllegalAccessException e) {
             // Show message if it is not a valid click
+            e.printStackTrace();
             chessView.showMessage(ERROR_CLICK_ID);
         }
     }
@@ -173,7 +174,7 @@ public class ChessController {
     // call minimaxPlayer to calculate the best move
     private void playAI(int currentPlayer) {
         if (AI_MODE == true && currentPlayer == 1) {
-            List<Point> move = minimaxPlayer.getBestMove(board, 2);
+            List<Point> move = minimaxPlayer.getBestMove(board, 4);
             onTileClick(move.get(0));
             onTileClick(move.get(1));
         }
