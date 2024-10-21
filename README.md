@@ -11,7 +11,7 @@ game that my grandfather and I used to play when I was young. I plan to add mult
 
 All classes are well-refactored and follow the OOP principle and MVC pattern. I implemented the Chess game first and used the existing classes to create 'Chess vs. Chinese Chess.'
 ## AI Player 
-Created an AI player using the Minimax algorithm. The current setting checks up to step 2 for performance issues from recursion.
+Created an AI player using the Minimax algorithm with alpha-beta pruning. The current setting checks up to step 2 for performance issues from recursion.
 I plan to add AI players that use more complex algorithm in the future.
 ## Resources Used
 
